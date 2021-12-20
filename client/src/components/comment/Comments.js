@@ -50,7 +50,7 @@ function Comments({ id, userId, userName }) {
         onChange={onChange}
         placeholder="Comment"
       />
-      <Comment_Button color="primary" block onSubmit={onSubmit}>
+      <Comment_Button color="primary" onSubmit={onSubmit}>
         Submit
       </Comment_Button>
     </>
