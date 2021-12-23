@@ -18,22 +18,10 @@ const CommentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   },
-  /*reply: [
-    {
-      contents: {
-        type: String,
-        required: true,
-      },
-      date: {
-        type: String,
-        default: moment().format('MMMM DD, YYYY'),
-      },
-      creator: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',*
-      },
-    },
-  ],*/
+  creatorName: {
+    type: String,
+    required: true,
+  },
 });
 
 const Comment = mongoose.model('comment', CommentSchema);

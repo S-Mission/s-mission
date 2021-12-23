@@ -28,16 +28,22 @@ function Navbar() {
         </Logo>
         <MenuContainer>
           <div>
-            <Link to="/project/category/web">WEB</Link>
+            <Link to="/project/category/web">Web</Link>
           </div>
           <div>
-            <Link to="/project/category/app">APP</Link>
+            <Link to="/project/category/android">Android</Link>
+          </div>
+          <div>
+            <Link to="/project/category/ios">iOS</Link>
+          </div>
+          <div>
+            <Link to="/project/category/bigdata">Big data</Link>
           </div>
           <div>
             <Link to="/project/category/ai">AI</Link>
           </div>
           <div>
-            <Link to="/project/category/design">DESIGN</Link>
+            <Link to="/project/category/design">Design</Link>
           </div>
         </MenuContainer>
         <SearchInput />

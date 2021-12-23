@@ -1,50 +1,62 @@
+import { COMMENT_DELETE_SUCCESS } from 'redux/types/comment_types';
 import {
-  PROJECT_COMMENT_LOADING_REQUEST,
-  PROJECT_COMMENT_LOADING_FAILURE,
-  PROJECT_COMMENT_LOADING_SUCCESS,
-  PROJECT_COMMENT_UPLOADING_FAILURE,
-  PROJECT_COMMENT_UPLOADING_SUCCESS,
-  PROJECT_COMMENT_UPLOADING_REQUEST,
-} from 'redux/types/project_types';
+  COMMENT_LOADING_REQUEST,
+  COMMENT_LOADING_SUCCESS,
+  COMMENT_LOADING_FAILURE,
+  COMMENT_UPLOADING_REQUEST,
+  COMMENT_UPLOADING_SUCCESS,
+  COMMENT_UPLOADING_FAILURE,
+} from 'redux/types/comment_types';
 
 const initialState = {
-  isAuthenticated: null,
-  isLoading: false,
-  projects: [],
-  is_comment: false,
-  contents: '',
-  creator: '',
-  reply: '',
-  date: '',
-  errmsg: '',
+  comments: [],
+  creatorId: '',
+  loading: false,
+  isAuthenticated: false,
+  errorMsg: '',
 };
 
-const authReducer = (state = initialState, action) => {
+const commentReducer = (state = initialState, action) => {
   switch (action.type) {
-    case PROJECT_COMMENT_LOADING_REQUEST:
-    case PROJECT_COMMENT_UPLOADING_REQUEST:
+    case COMMENT_LOADING_REQUEST:
+    case COMMENT_UPLOADING_REQUEST:
       return {
         ...state,
         isLoading: true,
       };
-    case PROJECT_COMMENT_LOADING_FAILURE:
 
-    case PROJECT_COMMENT_UPLOADING_FAILURE:
+    case COMMENT_LOADING_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        is_comment: false,
-        errmsg: action.payload.e,
+        comments: action.payload,
       };
 
-    case PROJECT_COMMENT_UPLOADING_SUCCESS:
-    case PROJECT_COMMENT_LOADING_SUCCESS:
+    case COMMENT_UPLOADING_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        contents: action.payload,
+        comments: [...state.comments, action.payload],
+        isAuthenticated: true,
       };
+
+    case COMMENT_DELETE_SUCCESS:
+      window.location.reload();
+
+      return {
+        ...state,
+      };
+
+    case COMMENT_LOADING_FAILURE:
+    case COMMENT_UPLOADING_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
+
+    default:
+      return state;
   }
 };
 
-export default authReducer;
+export default commentReducer;

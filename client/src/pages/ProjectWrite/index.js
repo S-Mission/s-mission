@@ -55,7 +55,7 @@ function ProjectWrite() {
   const editorRef = createRef();
 
   const onSubmit = async (e) => {
-    const { title, previewImg, contents, category } = form;
+    const { title, contents, category, previewImg } = form;
     const token = localStorage.getItem('token');
     let data = {
       title,
@@ -104,7 +104,7 @@ function ProjectWrite() {
             </Select>
           </Form.Item>
           <Form.Item name={'previewImg'} label="미리보기 이미지">
-            <Imageupload onUploadFunction={onImageChange} />
+            <Imageupload refreshFunction={onImageChange} />
             <span>* 최대 3장까지 업로드 가능</span>
           </Form.Item>
           <Editor

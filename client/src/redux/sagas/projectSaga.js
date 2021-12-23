@@ -157,7 +157,7 @@ const updateprojectAPI = (payload) => {
     config.headers['x-auth-token'] = token;
   }
 
-  return axios.post(`/api/project/${payload}/update`, payload, config);
+  return axios.post(`/api/project/${payload.id}/update`, payload, config);
 };
 
 function* updateProject(action) {
@@ -168,6 +168,8 @@ function* updateProject(action) {
       type: PROJECT_UPDATE_SUCCESS,
       payload: result.data,
     });
+
+    window.location.pathname = `project/detail/${result.data._id}`;
   } catch (e) {
     yield put({
       type: PROJECT_UPDATE_FAILURE,

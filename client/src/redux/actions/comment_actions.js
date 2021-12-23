@@ -1,23 +1,30 @@
 import {
-  COMMENT_EDIT_REQUEST,
   COMMENT_LOADING_REQUEST,
   COMMENT_UPLOADING_REQUEST,
+  COMMENT_EDIT_REQUEST,
   COMMENT_DELETE_REQUEST,
-} from 'redux/types/project_types';
+} from 'redux/types/comment_types';
 
+// Load
 export const loadcommentAction = (projectID) => ({
   type: COMMENT_LOADING_REQUEST,
   payload: projectID,
 });
-export const deletecommentAction = (userID) => ({
-  type: COMMENT_DELETE_REQUEST,
-  payload: userID,
+
+// Create
+export const createcommentAction = (data) => ({
+  type: COMMENT_UPLOADING_REQUEST,
+  payload: data,
 });
+
+// Edit
 export const editcommentAction = (userID) => ({
   type: COMMENT_EDIT_REQUEST,
   payload: userID,
 });
-export const createcommentAction = (body) => ({
-  type: COMMENT_UPLOADING_REQUEST,
-  payload: body,
+
+// Delete
+export const deletecommentAction = (data) => ({
+  type: COMMENT_DELETE_REQUEST,
+  payload: data,
 });

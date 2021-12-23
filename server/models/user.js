@@ -36,6 +36,18 @@ const UserSchema = new mongoose.Schema({
       ref: 'project',
     },
   ],
+  comments: [
+    {
+      project_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'project',
+      },
+      comment_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'comment',
+      },
+    },
+  ],
 });
 
 const User = mongoose.model('user', UserSchema);

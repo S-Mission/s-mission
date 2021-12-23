@@ -2,9 +2,6 @@ import axios from 'axios';
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import {
-  CLEAR_COMMENT_ERROR_FAILURE,
-  CLEAR_COMMENT_ERROR_REQUEST,
-  CLEAR_COMMENT_ERROR_SUCCESS,
   COMMENT_DELETE_FAILURE,
   COMMENT_DELETE_REQUEST,
   COMMENT_DELETE_SUCCESS,
@@ -14,11 +11,14 @@ import {
   COMMENT_UPLOADING_FAILURE,
   COMMENT_UPLOADING_REQUEST,
   COMMENT_UPLOADING_SUCCESS,
-} from '../types';
+  COMMENT_EDIT_REQUEST,
+  COMMENT_EDIT_SUCCESS,
+  COMMENT_EDIT_FAILURE,
+} from '../types/comment_types';
 
 // Load Comments
 const loadCommentsAPI = (payload) => {
-  return axios.get(`/api/product/${payload}/comments`);
+  return axios.get(`/api/project/${payload}/comments`);
 };
 
 function* loadComments(action) {
@@ -43,7 +43,9 @@ function* watchloadComments() {
 
 // Upload Comment
 const uploadCommentAPI = (payload) => {
-  return axios.post(`/api/product/${payload.id}/comments`, payload);
+  console.log(payload);
+
+  return axios.post(`/api/project/${payload.id}/comments`, payload);
 };
 
 function* uploadComment(action) {
@@ -85,7 +87,7 @@ const deleteCommentAPI = (payload) => {
   }
 
   return axios.delete(
-    `/api/product/comment/${payload.commentId}`,
+    `/api/project/comment/${payload.commentId}`,
     payload,
     config,
   );
@@ -111,28 +113,10 @@ function* watchdeleteComment() {
   yield takeEvery(COMMENT_DELETE_REQUEST, deleteComment);
 }
 
-// Clear Comment Error
-function* clearCommentError() {
-  try {
-    yield put({
-      type: CLEAR_COMMENT_ERROR_SUCCESS,
-    });
-  } catch (e) {
-    yield put({
-      type: CLEAR_COMMENT_ERROR_FAILURE,
-    });
-  }
-}
-
-function* watchclearCommentError() {
-  yield takeEvery(CLEAR_COMMENT_ERROR_REQUEST, clearCommentError);
-}
-
 export default function* commentSaga() {
   yield all([
     fork(watchloadComments),
     fork(watchuploadComment),
     fork(watchdeleteComment),
-    fork(watchclearCommentError),
   ]);
 }

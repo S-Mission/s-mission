@@ -34,7 +34,7 @@ export const Logo = styled.a`
 `;
 
 export const MenuContainer = styled.div`
-  width: 25%;
+  width: 35%;
   display: flex;
   justify-content: flex-start;
   padding-top: 8px;

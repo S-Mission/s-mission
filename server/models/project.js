@@ -31,6 +31,12 @@ const ProjectSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'comment',
+    },
+  ],
   views: {
     type: Number,
     default: 0,

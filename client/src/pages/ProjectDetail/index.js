@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
 import ImageGallery from 'react-image-gallery';
 import ChatImg from './chat.png';
 
@@ -18,7 +18,6 @@ import {
 } from './style';
 import { Button } from 'antd';
 
-//
 import { useDispatch, useSelector } from 'react-redux';
 import {
   detailprojectAction,
@@ -26,19 +25,20 @@ import {
   loadviewAction,
   upviewAction,
 } from 'redux/actions/project_actions';
-import Comments from 'components/comment/Comments';
+import Comments from 'components/Comment/Comments';
 import { Link } from 'react-router-dom';
 import { loadcommentAction } from 'redux/actions/comment_actions';
+import { deletecommentAction } from 'redux/actions/comment_actions';
 
 const images = [];
 
 function ProjectDetail(req) {
-  const { projectdetail, creator, is_project, category, views } = useSelector(
-    (state) => state.project,
-  );
+  const { projectdetail, creator, is_project, category, preimages } =
+    useSelector((state) => state.project);
   const { userId, userName } = useSelector((state) => state.auth);
+  const { comments } = useSelector((state) => state.comment);
 
-  const { contents, date, previewImg, title } = projectdetail;
+  const { contents, date, previewImg, title, views } = projectdetail;
   const dispatch = useDispatch();
   const projectID = req.match.params.id;
 
@@ -68,14 +68,36 @@ function ProjectDetail(req) {
 
   const onDeleteClick = (e) => {
     e.preventDefault();
+
     var result = window.confirm('글을 삭제하시겠습니까?');
+
     if (result) {
       const token = localStorage.getItem('token');
       const body = { token, projectID };
+
       dispatch(deleteprojectAction(body));
+
       req.history.push('1');
     }
   };
+
+  const onCommentDeleteClick = useCallback(
+    (commentId) => {
+      var result = window.confirm('댓글을 삭제하시겠습니까?');
+
+      if (result) {
+        const data = {
+          userId,
+          commentId,
+          projectId: projectID,
+          token: localStorage.getItem('token'),
+        };
+
+        dispatch(deletecommentAction(data));
+      }
+    },
+    [dispatch, userId, projectID],
+  );
 
   // 글 수정, 삭제
   const EditDelete_Button = (
@@ -83,7 +105,11 @@ function ProjectDetail(req) {
       <Link to={`/project/edit/${projectID}`}>
         <Button>글 수정하기</Button>
       </Link>
-      <Button onClick={onDeleteClick} type="danger">
+      <Button
+        onClick={onDeleteClick}
+        type="danger"
+        style={{ marginLeft: '4px' }}
+      >
         글 삭제하기
       </Button>
     </EditDeleteContainer>
@@ -92,6 +118,7 @@ function ProjectDetail(req) {
   return (
     <DetailContainer>
       <Wrap>
+        {console.log(preimages)}
         {is_project ? (
           <>
             <LeftSide>
@@ -99,30 +126,93 @@ function ProjectDetail(req) {
               <div>
                 <CategoryDateContainer>
                   <div>
-                    <Button
-                      type="primary"
-                      style={{ width: '70px', marginRight: '4px' }}
-                    >
-                      {category.categoryName}
-                    </Button>
+                    <Button type="primary">{category.categoryName}</Button>
                   </div>
                   <div>{date}</div>
                 </CategoryDateContainer>
-                {/* <h4>{creator.name}</h4> */}
                 <ContentContainer>
-                  조회수 : {views}
+                  <div
+                    style={{
+                      textAlign: 'end',
+                      color: 'gray',
+                      marginBottom: '16px',
+                    }}
+                  >
+                    <Link
+                      to={`/user/mypage/${creator._id}`}
+                      style={{ marginRight: '10px' }}
+                    >
+                      {creator.name}
+                    </Link>
+                    조회수 : {views}
+                  </div>
                   <div dangerouslySetInnerHTML={{ __html: contents }}></div>
-                  <div>
+                  <div
+                    style={{
+                      marginTop: '32px',
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
                     <Button onClick={() => (window.location.href = '/project')}>
                       목록
                     </Button>
                   </div>
                 </ContentContainer>
                 <CommentContainer>
-                  <h2>
-                    <b>COMMENTS</b>
-                  </h2>
-                  <input placeholder="댓글을 작성해주세요." />
+                  <Comments
+                    id={projectID}
+                    userId={userId}
+                    userName={userName}
+                  />
+                  <div
+                    style={{
+                      marginTop: '16px',
+                    }}
+                  >
+                    {Array.isArray(comments)
+                      ? comments.map((comment) => (
+                          <div key={comment._id} style={{ padding: '16px 0' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                              }}
+                            >
+                              <div>
+                                <Link to={`/user/mypage/${comment.creator}`}>
+                                  {comment.creatorName}
+                                </Link>
+                              </div>
+                              <div style={{ color: 'gray' }}>
+                                {comment.date}
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                marginTop: '12px',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                              }}
+                            >
+                              <div>{comment.contents}</div>
+                              {comment.creator === userId ? (
+                                <div
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() =>
+                                    onCommentDeleteClick(comment._id)
+                                  }
+                                >
+                                  삭제
+                                </div>
+                              ) : (
+                                ''
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      : ''}
+                  </div>
                 </CommentContainer>
               </div>
             </LeftSide>
@@ -148,11 +238,6 @@ function ProjectDetail(req) {
         ) : (
           <div>프로젝트가 존재하지 않습니다.</div>
         )}
-        <Comments
-          userId={userId}
-          id={req.match.params.id}
-          userName={userName}
-        />
       </Wrap>
       <ChatImgContainer>
         <Link to="/chat">

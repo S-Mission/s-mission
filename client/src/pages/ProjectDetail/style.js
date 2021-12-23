@@ -43,8 +43,8 @@ export const CategoryDateContainer = styled.div`
 export const ContentContainer = styled.div`
   width: 100%;
   border-top: 1px solid #dbdbdb;
-  padding-top: 32px;
-  margin-bottom: 64px;
+  padding-top: 16px;
+  margin-bottom: 16px;
 `;
 
 export const CommentContainer = styled.div`
@@ -52,7 +52,7 @@ export const CommentContainer = styled.div`
   border-top: 1px solid #dbdbdb;
   padding-top: 32px;
 
-  & > input {
+  & input {
     padding: 12px;
     width: 100%;
     border: 1px solid #dbdbdb;

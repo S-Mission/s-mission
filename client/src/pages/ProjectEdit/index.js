@@ -1,10 +1,8 @@
-import React, { useState, useLayoutEffect, createRef } from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  editprojectAction,
-  updateprojectAction,
-} from 'redux/actions/project_actions';
-import { Form, Input, Button, Upload } from 'antd';
+import { updateprojectAction, editprojectAction } from 'redux/actions/project_actions';
+import { Form, Input, Button, Upload, Select } from 'antd';
+import Imageupload from './Imageupload';
 
 // Editor
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -13,10 +11,11 @@ import { Editor } from '@toast-ui/react-editor';
 import { UploadOutlined } from '@ant-design/icons';
 import { PostWriteHeader, ProjectWriteContainer } from './style';
 
+const { Option } = Select;
 function ProjectEdit(req) {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-  const { title, contents, category } = useSelector((state) => state.project);
+  const { projectdetail, category, title, contents, preimages } = useSelector((state) => state.project);
 
   const normFile = (e) => {
     console.log('Upload event:', e);
@@ -27,11 +26,11 @@ function ProjectEdit(req) {
   };
 
   const [form, setForm] = useState({
-    title: `${title}`,
-    contents: `${contents}`,
-    fileUrl: '',
-    category: '',
+    title: `${projectdetail.title == undefined ? title : projectdetail.title}`,
+    contents: `${projectdetail.contents == undefined ? contents : projectdetail.contents}`,
+    category: `${category.categoryName}`,
   });
+  const [Image, setImage] = useState([]);
 
   const onValueChange = (e) => {
     setForm({
@@ -50,23 +49,28 @@ function ProjectEdit(req) {
     });
   };
 
+  const onImageChange = (image) => {
+    setImage(image);
+  }
+
   const dispatch = useDispatch();
-  useLayoutEffect(() => {
+
+  useEffect(() => {
     dispatch(editprojectAction(req.match.params.id));
-  }, [req.match.params.id, dispatch]);
+  }, [req.match.params.id]);
 
   const onSubmit = async (e) => {
     await e.preventDefault();
-    const { title, previewImg, contents, category } = form;
+    const { title, contents, category } = form;
     const token = localStorage.getItem('token');
     let data = {
       title,
       contents,
-      previewImg,
+      Image,
       category,
       token,
+      id: req.match.params.id
     };
-    console.log(token);
 
     dispatch(updateprojectAction(data));
   };
@@ -90,27 +94,29 @@ function ProjectEdit(req) {
             />
           </Form.Item>
           <Form.Item name={'category'} rules={[{ required: true }]}>
-            <Input
-              name="category"
-              id="category"
-              onChange={onValueChange}
-              defaultValue={form.category}
-            />
+            <Select
+                name="category"
+                style={{ width: 200 }}
+                onChange={onValueChange}
+                placeholder="카테고리를 선택하세요"
+                defaultValue={form.category}
+              >
+                <Option value="web">Web</Option>
+                <Option value="android">Android</Option>
+                <Option value="ios">IOS</Option>
+                <Option value="data">빅데이터</Option>
+                <Option value="ML">인공지능</Option>
+                <Option value="design">Design</Option>
+            </Select>
           </Form.Item>
           <Form.Item
-            name={'fileUrl'}
+            name={'previewImg'}
             label="project file"
             valuePropName="fileList"
             getValueFromEvent={normFile}
           >
-            <Upload
-              name="fileUrl"
-              action="/upload.do"
-              listType="picture"
-              fileList={[form.fileUrl]}
-            >
-              <Button icon={<UploadOutlined />}>Click to upload</Button>
-            </Upload>
+            <Imageupload refreshFunction={onImageChange} />
+            <span>* 최대 3장까지 업로드 가능</span>
           </Form.Item>
           <Editor
             previewStyle="vertical"

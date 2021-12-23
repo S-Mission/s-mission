@@ -7,6 +7,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const app = express();
 
+const { swaggerUi, specs } = require('./swagger');
+
 const bodyParser = require('body-parser');
 
 const server = require('http').createServer(app);
@@ -31,7 +33,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/uploads', express.static('uploads'));
+app.use('/upload', express.static('upload'));
 
 const connect = mongoose
   .connect(MONGO_URI, {
@@ -49,6 +51,12 @@ app.use('/api/user', require('./routes/api/user'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/project', require('./routes/api/project'));
 app.use('/api/chat', require('./routes/api/chat'));
+
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true }),
+);
 
 ///////////////// socket.io /////////////////
 
