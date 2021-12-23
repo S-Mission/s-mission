@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { all, call, put, takeEvery, fork } from 'redux-saga/effects';
+import { TOP_RATED_PROJECTS_REQUEST } from 'redux/types/project_types';
+import { TOP_RATED_PROJECTS_FAILURE } from 'redux/types/project_types';
+import { TOP_RATED_PROJECTS_SUCCESS } from 'redux/types/project_types';
 import {
   PROJECT_WRITE_REQUEST,
   PROJECT_WRITE_SUCCESS,
@@ -117,6 +120,31 @@ function* allProject(action) {
 
 function* watchprojectall() {
   yield takeEvery(PROJECT_LOADING_REQUEST, allProject);
+}
+
+// Top Rated Projects
+const topRatedProjectsAPI = () => {
+  return axios.get(`/api/project/topRate`);
+};
+
+function* topRatedProjects(action) {
+  try {
+    const result = yield call(topRatedProjectsAPI, action.payload);
+
+    yield put({
+      type: TOP_RATED_PROJECTS_SUCCESS,
+      payload: result.data,
+    });
+  } catch (e) {
+    yield put({
+      type: TOP_RATED_PROJECTS_FAILURE,
+      payload: e,
+    });
+  }
+}
+
+function* watchtopRatedProjects() {
+  yield takeEvery(TOP_RATED_PROJECTS_REQUEST, topRatedProjects);
 }
 
 // UPDATE project // 수정 페이지
@@ -301,6 +329,7 @@ export default function* projectSaga() {
   yield all([
     // project CRUD
     fork(watchcreateProject),
+    fork(watchtopRatedProjects),
     fork(watchprojectDetail),
     fork(watchprojectall),
     fork(watcheditproject),

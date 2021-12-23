@@ -38,7 +38,6 @@ function Imageupload(props) {
       <div>
         {Images.map((image, index) => (
           <div key={index}>
-            {/* 요기가 이상... */}
             <img
               src={`http://localhost:7000/${image}`}
               alt={`${image}`}

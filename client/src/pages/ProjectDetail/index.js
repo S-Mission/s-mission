@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
 import ImageGallery from 'react-image-gallery';
 import ChatImg from './chat.png';
 
@@ -17,6 +17,7 @@ import {
   ChatImgContainer,
 } from './style';
 import { Button } from 'antd';
+import { FolderOpenOutlined } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -30,9 +31,9 @@ import { Link } from 'react-router-dom';
 import { loadcommentAction } from 'redux/actions/comment_actions';
 import { deletecommentAction } from 'redux/actions/comment_actions';
 
-const images = [];
-
 function ProjectDetail(req) {
+  const images = [];
+  
   const { projectdetail, creator, is_project, category, preimages } =
     useSelector((state) => state.project);
   const { userId, userName } = useSelector((state) => state.auth);
@@ -48,17 +49,17 @@ function ProjectDetail(req) {
   };
 
   useLayoutEffect(() => {
-    dispatch(detailprojectAction(projectID));
     dispatch(loadviewAction(data));
     dispatch(upviewAction(data));
-  }, [dispatch, projectID]);
-
-  useEffect(() => {
     dispatch(loadcommentAction(projectID));
   }, [dispatch, projectID]);
 
-  const imageList = previewImg
-    ? previewImg.map((item) => {
+  useEffect(() => {
+    dispatch(detailprojectAction(projectID));
+  }, [dispatch, projectID]);
+
+  const listimage =  preimages
+    ? preimages.map((item) => {
         images.push({
           original: `http://localhost:7000/${item}`,
           thumbnail: `http://localhost:7000/${item}`,
@@ -118,7 +119,6 @@ function ProjectDetail(req) {
   return (
     <DetailContainer>
       <Wrap>
-        {console.log(preimages)}
         {is_project ? (
           <>
             <LeftSide>
@@ -140,7 +140,7 @@ function ProjectDetail(req) {
                   >
                     <Link
                       to={`/user/mypage/${creator._id}`}
-                      style={{ marginRight: '10px' }}
+                      style={{ marginRight: '10px', color: 'black' }}
                     >
                       {creator.name}
                     </Link>
@@ -180,7 +180,10 @@ function ProjectDetail(req) {
                               }}
                             >
                               <div>
-                                <Link to={`/user/mypage/${comment.creator}`}>
+                                <Link
+                                  to={`/user/mypage/${comment.creator}`}
+                                  style={{ color: 'black' }}
+                                >
                                   {comment.creatorName}
                                 </Link>
                               </div>
@@ -217,8 +220,8 @@ function ProjectDetail(req) {
               </div>
             </LeftSide>
             <RightSide>
-              {previewImg ? (
-                previewImg.length > 0 ? (
+              {preimages ? (
+                preimages.length > 0 ? (
                   <ImageGallery items={images} autoPlay />
                 ) : (
                   ''
@@ -227,10 +230,13 @@ function ProjectDetail(req) {
                 ''
               )}
               <FileContainer>
-                <div>파일이 들어갈 공간입니다.</div>
-                <div>파일이 들어갈 공간입니다.</div>
-                <div>파일이 들어갈 공간입니다.</div>
-                <div>파일이 들어갈 공간입니다.</div>
+                {projectdetail.files ?
+                  projectdetail.originalfileName.map((file, idx) => 
+                    <div key={idx}>
+                      <FolderOpenOutlined />
+                      &nbsp;{projectdetail.originalfileName[idx]}
+                    </div>
+                  ): ""}
               </FileContainer>
               {userId === creator._id ? EditDelete_Button : <></>}
             </RightSide>

@@ -1,3 +1,4 @@
+import { TOP_RATED_PROJECTS_REQUEST } from 'redux/types/project_types';
 import {
   PROJECT_WRITE_REQUEST,
   PROJECT_DETAIL_REQUEST,
@@ -12,6 +13,10 @@ import {
 export const createprojectAction = (data) => ({
   type: PROJECT_WRITE_REQUEST,
   payload: data,
+});
+
+export const topRatedProjectsAction = () => ({
+  type: TOP_RATED_PROJECTS_REQUEST,
 });
 
 export const detailprojectAction = (project_id) => ({

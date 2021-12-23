@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
 const app = express();
+const util = require('./util');
 
 const { swaggerUi, specs } = require('./swagger');
 
@@ -56,6 +57,10 @@ app.use(
   '/api-docs',
   swaggerUi.serve,
   swaggerUi.setup(specs, { explorer: true }),
+  function(req, res, next) {
+    res.locals.util = util;
+    next();
+  }
 );
 
 ///////////////// socket.io /////////////////

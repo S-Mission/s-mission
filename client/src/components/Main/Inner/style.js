@@ -31,11 +31,11 @@ export const NavButton = styled(Button)`
 export const CardContainer = styled.div`
   margin-top: 32px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
 `;
 
 export const CardContent = styled(Card)`
-  width: 250;
+  width: 250px;
   height: 270px;
   margin-right: 32px;
 `;

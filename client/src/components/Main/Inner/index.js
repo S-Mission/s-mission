@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // antd
 import { Button, Card, Divider } from 'antd';
@@ -16,6 +16,7 @@ import {
 
 // component
 import LoginModal from 'components/LoginModal/LoginModal';
+import { topRatedProjectsAction } from 'redux/actions/project_actions';
 
 const { Meta } = Card;
 
@@ -41,6 +42,13 @@ function Inner() {
   };
 
   const { isAuthenticated, userName } = useSelector((state) => state.auth);
+  const { topRated } = useSelector((state) => state.project);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(topRatedProjectsAction());
+  }, [dispatch]);
 
   return (
     <InnerContainer>
@@ -51,43 +59,37 @@ function Inner() {
           </NavButton>
         </div>
         <CardContainer>
-          <Link to="/project/detail/615fca82cf391c178518b855">
-            <CardContent
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
-              }
-            >
-              <Meta title="Card title" description="This is the description" />
-            </CardContent>
-          </Link>
+          {Array.isArray(topRated)
+            ? topRated.map((project) => {
+                let content = project.contents.replace(
+                  /<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/gi,
+                  '',
+                );
 
-          <Link to="/project/detail/1">
-            <CardContent
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
-              }
-            >
-              <Meta title="Card title" description="This is the description" />
-            </CardContent>
-          </Link>
-          <Link to="/project/detail/1">
-            <CardContent
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
-              }
-            >
-              <Meta title="Card title" description="This is the description" />
-            </CardContent>
-          </Link>
+                return (
+                  <Link to={`/project/detail/${project._id}`}>
+                    <CardContent
+                      cover={
+                        // 이미지 링크는 나중에 S3로 옮기고 나서 해야될듯... 로컬에 파일이 없으니 사진이 안뜨니까
+                        <img
+                          alt="example"
+                          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                        />
+                      }
+                    >
+                      <Meta
+                        title={project.title}
+                        description={
+                          content.length >= 30
+                            ? content.slice(0, 30) + '...'
+                            : content
+                        }
+                      />
+                    </CardContent>
+                  </Link>
+                );
+              })
+            : ''}
         </CardContainer>
       </div>
 

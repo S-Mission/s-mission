@@ -1,3 +1,6 @@
+import { TOP_RATED_PROJECTS_SUCCESS } from 'redux/types/project_types';
+import { TOP_RATED_PROJECTS_FAILURE } from 'redux/types/project_types';
+import { TOP_RATED_PROJECTS_REQUEST } from 'redux/types/project_types';
 import {
   PROJECT_WRITE_REQUEST,
   PROJECT_WRITE_SUCCESS,
@@ -29,6 +32,7 @@ const initialState = {
   isAuthenticated: null,
   isLoading: false,
   projects: [],
+  topRated: [],
   projectdetail: '',
   is_project: false,
   title: '',
@@ -52,6 +56,7 @@ const projectReducer = (state = initialState, action) => {
     case PROJECT_UPDATE_REQUEST:
     case PROJECT_LOADVIEW_REQUEST:
     case PROJECT_UPVIEW_REQUEST:
+    case TOP_RATED_PROJECTS_REQUEST:
       return {
         ...state,
         isLoading: true,
@@ -83,6 +88,19 @@ const projectReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         projects: action.payload,
+      };
+
+    case TOP_RATED_PROJECTS_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        // 여기도 이렇게 할게 아니라 서버에서 3개로 잘라서 와야됨
+        topRated: action.payload.slice(0, 3),
+      };
+    case TOP_RATED_PROJECTS_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
       };
 
     case PROJECT_DETAIL_FAILURE:

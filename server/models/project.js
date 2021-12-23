@@ -19,6 +19,10 @@ const ProjectSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  originalfileName : {
+    type: Array,
+    default: [],
+  },
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'category',
