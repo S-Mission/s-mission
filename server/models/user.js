@@ -36,6 +36,16 @@ const UserSchema = new mongoose.Schema({
       ref: 'project',
     },
   ],
+  pay_state: {
+    type: String,
+    required: true,
+    default: 'before',
+    enum: ['before', 'paid', 'cancelled'],
+  },
+  pay_date: {
+    type: Date,
+    default: moment().format('MMMM DD, YYYY'),
+  },
   comments: [
     {
       project_id: {

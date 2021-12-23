@@ -4,6 +4,7 @@ const CategorySchema = new mongoose.Schema({
   categoryName: {
     type: String,
     default: '미분류',
+    required: true,
   },
   projects: [
     {
@@ -11,6 +12,10 @@ const CategorySchema = new mongoose.Schema({
       ref: 'project',
     },
   ],
+  tasks: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
 });
 
 const Category = mongoose.model('category', CategorySchema);

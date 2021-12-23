@@ -25,19 +25,26 @@ function Comments({ id, userId, userName }) {
   );
 
   return (
-    <>
-      <Input
-        innerRef={resetValue}
-        type="textarea"
-        name="contents"
-        id="contents"
-        onChange={onChange}
-        placeholder="Comment"
-      />
-      <Comment_Button color="primary" onSubmit={onSubmit}>
-        Submit
-      </Comment_Button>
-    </>
+    <div>
+      <h2>
+        <b>COMMENTS</b>
+      </h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <input
+          id="contents"
+          name="contents"
+          placeholder="댓글을 입력해주세요."
+          onChange={onChange}
+        />
+        <Button
+          style={{ height: '48px', marginLeft: '4px' }}
+          type="primary"
+          onClick={onSubmit}
+        >
+          작성하기
+        </Button>
+      </div>
+    </div>
   );
 }
 
