@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button, Table } from 'antd';
 import {
@@ -10,6 +10,8 @@ import {
   Right,
   Wrap,
 } from './style';
+import { loadUserProjectAction } from 'redux/actions/project_actions';
+import Modal from 'antd/lib/modal/Modal';
 
 const columns = [
   {
@@ -18,9 +20,11 @@ const columns = [
     key: 'title',
     width: '70%',
     align: 'center',
-    render: (title) => (
+    render: (title, record) => (
       <div style={{ textAlign: 'start' }}>
-        {title.length >= 80 ? title.slice(0, 80) + '...' : title}
+        <Link to={`/project/detail/${record._id}`} style={{ color: 'black' }}>
+          {title.length >= 80 ? title.slice(0, 80) + '...' : title}
+        </Link>
       </div>
     ),
   },
@@ -33,64 +37,68 @@ const columns = [
   },
   {
     title: '조회수',
-    dataIndex: 'view',
-    key: 'view',
+    dataIndex: 'views',
+    key: 'views',
     width: '10%',
     align: 'center',
   },
 ];
 
-const data = [
-  {
-    key: '1',
-    title:
-      'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    view: 32,
-    date: '2021.1.13',
-  },
-  {
-    key: '2',
-    title:
-      "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took",
-    view: 42,
-    date: '2021.1.13',
-  },
-  {
-    key: '3',
-    title:
-      'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.',
-    view: 32,
-    date: '2021.1.13',
-  },
-];
-
 function MyPage() {
-  const { userId, user } = useSelector((state) => state.auth);
+  const [signInVisible, setSignInVisible] = useState(false);
+
+  const showSignInModal = () => {
+    setSignInVisible(true);
+  };
+  const handleSignInCancel = () => {
+    setSignInVisible(false);
+  };
+
+  const { userId, user, isAuthenticated } = useSelector((state) => state.auth);
+  const { userProject } = useSelector((state) => state.project);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadUserProjectAction(userId));
+  }, [dispatch, userId]);
 
   return (
     <MyPageContainer>
-      <Wrap>
-        <Left>
-          <h2>{user.name}님의 마이페이지</h2>
-          <Picture>
-            <div>
-              <img src="https://placeimg.com/200/200/people" />
-            </div>
-            <div>
-              <Button type="primary">사진 수정하기</Button>
-            </div>
-          </Picture>
-        </Left>
+      {isAuthenticated ? (
+        <Wrap>
+          <Left>
+            <h2>{user.name}님의 마이페이지</h2>
+            <Picture>
+              <div>
+                <img src="https://placeimg.com/200/200/people" />
+              </div>
+              <div>
+                <Button type="primary" onClick={showSignInModal}>
+                  사진 수정하기
+                </Button>
+              </div>
+            </Picture>
+          </Left>
 
-        <Right>
-          <h2>작성한 게시글</h2>
-          <Table columns={columns} dataSource={data} />
-          <ButtonContainer>
-            <Link to="">회원 정보 수정하기</Link>
-            <Link to={`/user/closeaccount/${userId}`}>회원 탈퇴하기</Link>
-          </ButtonContainer>
-        </Right>
-      </Wrap>
+          <Right>
+            <h2>작성한 게시글</h2>
+            <Table columns={columns} dataSource={userProject} />
+            <ButtonContainer>
+              <Link to="">회원 정보 수정하기</Link>
+              <Link to={`/user/closeaccount/${userId}`}>회원 탈퇴하기</Link>
+            </ButtonContainer>
+          </Right>
+        </Wrap>
+      ) : (
+        <div>로그인이 필요한 서비스입니다.</div>
+      )}
+
+      <Modal
+        visible={signInVisible}
+        onCancel={handleSignInCancel}
+        footer=""
+      ></Modal>
     </MyPageContainer>
   );
 }

@@ -1,4 +1,5 @@
 import { SEARCH_REQUEST } from 'redux/types/project_types';
+import { LOADING_USER_PROJECT_REQUEST } from 'redux/types/project_types';
 import { TOP_RATED_PROJECTS_REQUEST } from 'redux/types/project_types';
 import {
   PROJECT_WRITE_REQUEST,
@@ -43,6 +44,11 @@ export const deleteprojectAction = (data) => ({
 export const readprojectAction = (data) => ({
   type: PROJECT_LOADING_REQUEST,
   payload: data,
+});
+
+export const loadUserProjectAction = (userId) => ({
+  type: LOADING_USER_PROJECT_REQUEST,
+  payload: userId,
 });
 
 export const loadviewAction = (userID) => ({

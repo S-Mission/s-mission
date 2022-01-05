@@ -21,6 +21,7 @@ export const Wrap = styled.div`
 
 export const Left = styled.div`
   width: 20%;
+  text-align: center;
 `;
 
 export const Picture = styled.div`

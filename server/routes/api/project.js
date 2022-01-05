@@ -290,6 +290,19 @@ router.get('/category/:categoryName', async (req, res, next) => {
   }
 });
 
+// 해당 유저가 작성한 게시글
+router.get('/user/:id', async (req, res) => {
+  try {
+    const project = await Project.find({
+      creator: req.params.id,
+    });
+
+    res.send(project);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 // Views Load //
 router.get('/:id/views', async (req, res) => {
   try {
