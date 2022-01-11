@@ -1,10 +1,10 @@
 import React, { useLayoutEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Button, Col, Row } from 'antd';
+import { Button } from 'antd';
 
 // style
-import { OfficeContainer, CardContent } from './style';
+import { OfficeContainer, CardContent, CardContainer, CardWrap } from './style';
 
 import { readprojectAction } from 'redux/actions/project_actions';
 import { Link } from 'react-router-dom';
@@ -24,7 +24,7 @@ function ProjectContainer() {
           '',
         );
         return (
-          <Col key={index} span={8}>
+          <CardWrap key={index}>
             <Link to={`/project/detail/${project._id}`}>
               <CardContent title={project.title}>
                 <p>{project.creator.name}</p>
@@ -35,14 +35,14 @@ function ProjectContainer() {
                 </p>
               </CardContent>
             </Link>
-          </Col>
+          </CardWrap>
         );
       })
     : '';
 
   return (
     <OfficeContainer>
-      <Row>{projectCard}</Row>
+      <CardContainer>{projectCard}</CardContainer>
       <a href="/project">
         <Button type="primary">더보기</Button>
       </a>

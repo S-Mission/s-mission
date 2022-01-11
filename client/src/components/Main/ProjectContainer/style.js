@@ -2,7 +2,7 @@ import { Card } from 'antd';
 import styled from 'styled-components';
 
 export const OfficeContainer = styled.div`
-  width: 70%;
+  width: 1024px;
   max-width: 1120px;
   position: relative;
   left: 50%;
@@ -15,8 +15,19 @@ export const OfficeContainer = styled.div`
   }
 `;
 
+export const CardContainer = styled.div`
+  display: flex;
+  margin: -1rem;
+  flex-wrap: wrap;
+`;
+
+export const CardWrap = styled.div`
+  width: 20rem;
+  margin: 1rem;
+`;
+
 export const CardContent = styled(Card)`
   height: 213px;
   border-bottom: 2px solid #1990ff;
-  margin-bottom: 32px;
+  border-radius: 4px;
 `;

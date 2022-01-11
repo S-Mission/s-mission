@@ -2,7 +2,7 @@ import React, { useLayoutEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Col, Row } from 'antd';
-import { OfficeContainer, CardContent } from './style';
+import { OfficeContainer, CardContent, CardContainer, CardWrap } from './style';
 import { readprojectAction } from 'redux/actions/project_actions';
 import { Link } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ function ProjectList() {
           '',
         );
         return (
-          <Col key={index} span={8}>
+          <CardWrap key={index}>
             <Link to={`/project/detail/${project._id}`}>
               <CardContent title={project.title}>
                 <p>{project.creator.name}</p>
@@ -32,14 +32,14 @@ function ProjectList() {
                 </p>
               </CardContent>
             </Link>
-          </Col>
+          </CardWrap>
         );
       })
     : '';
 
   return (
     <OfficeContainer>
-      <Row>{projectCard}</Row>
+      <CardContainer>{projectCard}</CardContainer>
     </OfficeContainer>
   );
 }
