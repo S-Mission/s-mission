@@ -2,7 +2,12 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Col, Row } from 'antd';
-import { CategoryContainer, CardContent } from './style';
+import {
+  CategoryContainer,
+  CardContent,
+  CardContainer,
+  CardWrap,
+} from './style';
 import { Link, useParams } from 'react-router-dom';
 import { CATEGORY_FIND_REQUEST } from 'redux/types/project_types';
 
@@ -25,7 +30,7 @@ function CategoryFindResult() {
         '',
       );
       return (
-        <Col key={index} span={8}>
+        <CardWrap key={index}>
           <Link to={`/project/detail/${project._id}`}>
             <CardContent title={project.title}>
               <p>{project.creator.name}</p>
@@ -34,7 +39,7 @@ function CategoryFindResult() {
               </p>
             </CardContent>
           </Link>
-        </Col>
+        </CardWrap>
       );
     })
   ) : (
@@ -43,7 +48,7 @@ function CategoryFindResult() {
 
   return (
     <CategoryContainer>
-      <Row>{projectCard}</Row>
+      <CardContainer>{projectCard}</CardContainer>
     </CategoryContainer>
   );
 }

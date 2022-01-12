@@ -2,7 +2,13 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Col, Row } from 'antd';
-import { CardContent, Header, OfficeContainer } from './style';
+import {
+  CardContainer,
+  CardContent,
+  CardWrap,
+  Header,
+  OfficeContainer,
+} from './style';
 import { Link, useParams } from 'react-router-dom';
 import { searchAction } from 'redux/actions/project_actions';
 
@@ -25,7 +31,7 @@ function Search() {
           '',
         );
         return (
-          <Col key={index} span={8}>
+          <CardWrap key={index}>
             <Link to={`/project/detail/${project._id}`}>
               <CardContent title={project.title}>
                 <p>{project.creator.name}</p>
@@ -36,7 +42,7 @@ function Search() {
                 </p>
               </CardContent>
             </Link>
-          </Col>
+          </CardWrap>
         );
       })
     : '';
@@ -44,7 +50,7 @@ function Search() {
   return (
     <OfficeContainer>
       <Header>검색어 : {searchBy}</Header>
-      <Row>{searchCard}</Row>
+      <CardContainer>{searchCard}</CardContainer>
     </OfficeContainer>
   );
 }

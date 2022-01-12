@@ -4,6 +4,7 @@ import styled from 'styled-components';
 export const OfficeContainer = styled.div`
   width: 1024px;
   max-width: 1120px;
+  min-height: 60vh;
   position: relative;
   left: 50%;
   transform: translateX(-50%);
