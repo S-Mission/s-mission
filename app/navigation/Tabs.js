@@ -12,8 +12,10 @@ const Tab = createBottomTabNavigator();
 function Tabs() {
   return (
     <Tab.Navigator
-      screenOptions={{ tabBarActiveTintColor : THICK_BLUE }}
-      tabBarOptions={{ showLabel: false }}>
+      screenOptions={{
+        tabBarActiveTintColor : THICK_BLUE,
+        tabBarShowLabel: false }}
+    >
       <Tab.Screen name="Home" component={Home} options={{
         tabBarIcon: ({color, size}) => {
           return <SimpleLineIcons name="home" color={color} size={size}/>

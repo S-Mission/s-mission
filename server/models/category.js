@@ -5,10 +5,10 @@ const CategorySchema = new mongoose.Schema({
     type: String,
     default: '미분류',
   },
-  projects: [
+  posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'project',
+      ref: 'post',
     },
   ],
 });

@@ -1,11 +1,11 @@
 const express = require('express');
-const { Project } = require('../../models/project');
+const { Post } = require('../../models/post');
 
 const router = express.Router();
 
 router.get('/:searchTerm', async (req, res, next) => {
   try {
-    const result = await Project.find({
+    const result = await Post.find({
       title: {
         $regex: req.params.searchTerm,
         $options: 'i', // 대소문자 구분 X
