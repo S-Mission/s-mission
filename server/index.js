@@ -47,7 +47,7 @@ const connect = mongoose
 
 app.use('/api/user', require('./routes/api/user'));
 app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/project', require('./routes/api/project'));
+app.use('/api/post', require('./routes/api/post'));
 app.use('/api/chat', require('./routes/api/chat'));
 app.use('/api/search', require('./routes/api/search'));
 

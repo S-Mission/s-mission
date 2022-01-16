@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 
-const ProjectSchema = new mongoose.Schema({
+const PostSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -47,6 +47,6 @@ const ProjectSchema = new mongoose.Schema({
   },
 });
 
-const Project = mongoose.model('project', ProjectSchema);
+const Post = mongoose.model('post', PostSchema);
 
-module.exports = { Project };
+module.exports = { Post };
