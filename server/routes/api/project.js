@@ -42,6 +42,7 @@ router.get('/', async (req, res) => {
     const projectFindResult = await Project.find().populate({
       path: 'creator',
     });
+    
     const result = { projectFindResult };
     res.json(result);
   } catch (e) {
