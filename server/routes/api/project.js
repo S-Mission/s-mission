@@ -76,7 +76,7 @@ router.post('/uploadimage', (req, res) => {
 });
 
 // Upload File //
-router.post('/uploadfile', async(req, res) =>{
+router.post('/uploadfile', async (req, res) => {
   uploadfile(req, res, (err) => {
     if (err) return res.json({ success: false, err });
 
@@ -91,7 +91,8 @@ router.post('/uploadfile', async(req, res) =>{
 // Project Create //
 router.post('/write', auth, async (req, res) => {
   try {
-    const { title, contents, category, previewImg, file, originalfileName } = req.body;
+    const { title, contents, category, previewImg, file, originalfileName } =
+      req.body;
     // 새로운 프로젝트 생성
     const newProject = await Project.create({
       title,
@@ -147,32 +148,35 @@ router.post('/write', auth, async (req, res) => {
   }
 });
 
-
 // Get file //
-router.get('/uploadedFiles/:originalFileName', async function(req, res){
-  if(err) return res.json({ success: false, err });
+router.get('/uploadedFiles/:originalFileName', async function (req, res) {
+  if (err) return res.json({ success: false, err });
 
   var stream;
   var statusCode = 200;
-  try{
-      await function(){
-        var filePath = path.join(__dirname,'..','uploadedFiles',this.serverFileName);
-        var fileExists = fs.existsSync(filePath);
-        if(fileExists){
-          stream = fs.createReadStream(filePath);
-        }
-        else {
-          this.processDelete();
-        }
+  try {
+    await function () {
+      var filePath = path.join(
+        __dirname,
+        '..',
+        'uploadedFiles',
+        this.serverFileName,
+      );
+      var fileExists = fs.existsSync(filePath);
+      if (fileExists) {
+        stream = fs.createReadStream(filePath);
+      } else {
+        this.processDelete();
       }
-  } catch(e){
+    };
+  } catch (e) {
     statusCode = e;
   }
 
-  if(stream){
+  if (stream) {
     res.writeHead(statusCode, {
       'Content-Type': 'application/octet-stream',
-      'Content-Disposition': 'attachment; filename=' + file.originalFileName
+      'Content-Disposition': 'attachment; filename=' + file.originalFileName,
     });
     stream.pipe(res);
   } else {
