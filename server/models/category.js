@@ -6,10 +6,10 @@ const CategorySchema = new mongoose.Schema({
     default: '미분류',
     required: true,
   },
-  projects: [
+  posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'project',
+      ref: 'post',
     },
   ],
   tasks: {

@@ -4,22 +4,27 @@ import { Switch, Route } from 'react-router-dom';
 // antd
 import { Layout } from 'antd';
 
-// pages
-import Main from 'pages/Main/index';
-import SignUp from 'pages/SignUp/index';
-import CloseAccount from 'pages/CloseAccount';
-import ProjectDetail from 'pages/ProjectDetail';
-import MyPage from 'pages/MyPage';
-import ProjectList from 'pages/ProjectList';
-import ProjectWrite from 'pages/ProjectWrite';
-import ProjectEdit from 'pages/ProjectEdit';
-import ProjectManager from 'pages/ProjectManager';
-import FindPassword from 'pages/FindPassword';
-import CategoryFindResult from 'pages/CategoryFindResult';
-
 // components
 import Navbar from 'components/Navbar';
 import Footer from 'components/Footer/index';
+
+// pages
+import Main from 'pages/Community/Main/index';
+import SignUp from 'pages/Community/SignUp/index';
+import CloseAccount from 'pages/Community/CloseAccount';
+import ProjectDetail from 'pages/Community/ProjectDetail';
+import MyPage from 'pages/Community/MyPage';
+import ProjectList from 'pages/Community/ProjectList';
+import ProjectWrite from 'pages/Community/ProjectWrite';
+import ProjectEdit from 'pages/Community/ProjectEdit';
+import FindPassword from 'pages/Community/FindPassword';
+import CategoryFindResult from 'pages/Community/CategoryFindResult';
+import Search from 'pages/Community/Search';
+import Overview from 'pages/Manage/Overview';
+import Projects from 'pages/Manage/Projects';
+import TaskList from 'pages/Manage/TaskList';
+import Timeline from 'pages/Manage/Timeline';
+import Calendar from 'pages/Manage/Calendar';
 
 function App() {
   let Navigation =
@@ -52,7 +57,6 @@ function App() {
         <Route path="/user/closeaccount/:id" exact component={CloseAccount} />
 
         <Route path="/user/mypage/:id" exact component={MyPage} />
-        <Route path="/user/project/:id" exact component={ProjectManager} />
 
         <Route path="/project" exact component={ProjectList} />
         <Route path="/project/write" exact component={ProjectWrite} />
@@ -64,6 +68,14 @@ function App() {
           exact
           component={CategoryFindResult}
         />
+        <Route path="/search/:searchTerm" exact component={Search} />
+
+        {/* Manage */}
+        <Route path="/manage/projects" exact component={Projects} />
+        <Route path="/manage/overview" exact component={Overview} />
+        <Route path="/manage/tasklist" exact component={TaskList} />
+        <Route path="/manage/timeline" exact component={Timeline} />
+        <Route path="/manage/calendar" exact component={Calendar} />
       </Switch>
       {FooterContainer}
     </Layout>

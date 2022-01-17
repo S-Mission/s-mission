@@ -1,4 +1,10 @@
 import { TOP_RATED_PROJECTS_SUCCESS } from 'redux/types/project_types';
+import { SEARCH_REQUEST } from 'redux/types/project_types';
+import { SEARCH_FAILURE } from 'redux/types/project_types';
+import { LOADING_USER_PROJECT_SUCCESS } from 'redux/types/project_types';
+import { LOADING_USER_PROJECT_FAILURE } from 'redux/types/project_types';
+import { LOADING_USER_PROJECT_REQUEST } from 'redux/types/project_types';
+import { SEARCH_SUCCESS } from 'redux/types/project_types';
 import { TOP_RATED_PROJECTS_FAILURE } from 'redux/types/project_types';
 import { TOP_RATED_PROJECTS_REQUEST } from 'redux/types/project_types';
 import {
@@ -45,6 +51,9 @@ const initialState = {
   errmsg: '',
   categoryFindResult: '',
   views: 0,
+  searchResult: '',
+  searchBy: '',
+  userProject: [],
 };
 
 const projectReducer = (state = initialState, action) => {
@@ -57,6 +66,7 @@ const projectReducer = (state = initialState, action) => {
     case PROJECT_LOADVIEW_REQUEST:
     case PROJECT_UPVIEW_REQUEST:
     case TOP_RATED_PROJECTS_REQUEST:
+    case LOADING_USER_PROJECT_REQUEST:
       return {
         ...state,
         isLoading: true,
@@ -111,10 +121,18 @@ const projectReducer = (state = initialState, action) => {
         is_project: false,
       };
 
+    case PROJECT_WRITE_FAILURE:
+      alert(action.payload);
+
+      return {
+        ...state,
+        isLoading: false,
+        errmsg: action.payload,
+      };
+
     case PROJECT_LOADVIEW_FAILURE:
     case PROJECT_UPDATE_FAILURE:
     case PROJECT_EDITPAGE_FAILURE:
-    case PROJECT_WRITE_FAILURE:
       return {
         ...state,
         isLoading: false,
@@ -148,6 +166,19 @@ const projectReducer = (state = initialState, action) => {
         loading: false,
       };
 
+    case LOADING_USER_PROJECT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        userProject: action.payload,
+      };
+
+    case LOADING_USER_PROJECT_FAILURE:
+      return {
+        ...state,
+        loading: false,
+      };
+
     // views
     case PROJECT_UPVIEW_SUCCESS:
     case PROJECT_LOADVIEW_SUCCESS:
@@ -162,6 +193,27 @@ const projectReducer = (state = initialState, action) => {
         isLoading: false,
         errmsg: action.payload.fail,
       };
+
+    // Search
+    case SEARCH_REQUEST:
+      return {
+        ...state,
+        searchBy: action.payload,
+        isLoading: true,
+      };
+    case SEARCH_SUCCESS:
+      return {
+        ...state,
+        searchResult: action.payload,
+        isLoading: false,
+      };
+    case SEARCH_FAILURE:
+      return {
+        ...state,
+        searchResult: action.payload,
+        isLoading: false,
+      };
+
     default:
       return state;
   }

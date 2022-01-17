@@ -49,3 +49,28 @@ export const AsideBox = styled.div`
     margin-bottom: 16px;
   }
 `;
+
+export const UserInfo = styled.div`
+  padding-left: 32px;
+
+  & > .ant-divider {
+    margin-top: 0;
+  }
+
+  & > img {
+    border-radius: 70%;
+    margin-bottom: 14px;
+  }
+
+  & > h3 {
+    font-weight: bolder;
+  }
+
+  & button {
+    width: 100%;
+  }
+`;
+
+export const LoginBox = styled.div`
+  padding-top: 133px;
+`;

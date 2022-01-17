@@ -10,9 +10,9 @@ const CommentSchema = new mongoose.Schema({
     type: String,
     default: moment().format('MMMM DD, YYYY'),
   },
-  project: {
+  post: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'project',
+    ref: 'post',
   },
   creator: {
     type: mongoose.Schema.Types.ObjectId,

@@ -5,7 +5,6 @@ export const FooterContainer = styled.div`
   height: 150px;
   border-top: 1px solid #dbdbdb;
   background-color: #fafbfc;
-  margin-top: 64px;
 `;
 
 export const FooterWrap = styled.div`

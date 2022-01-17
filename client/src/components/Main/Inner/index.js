@@ -12,6 +12,8 @@ import {
   CardContainer,
   CardContent,
   AsideBox,
+  UserInfo,
+  LoginBox,
 } from './style';
 
 // component
@@ -95,31 +97,23 @@ function Inner() {
 
       <AsideBox>
         {isAuthenticated ? (
-          <div style={{ paddingLeft: '32px' }}>
-            <Divider orientation="center" style={{ marginTop: '0' }}>
-              User Info
-            </Divider>
-            <img
-              src="https://placeimg.com/150/150/person"
-              style={{ borderRadius: '70%', marginBottom: '14px' }}
-              alt="selfImage"
-            />
-            <h3 style={{ fontWeight: 'bolder' }}>{userName}</h3>
+          <UserInfo>
+            <Divider orientation="center">User Info</Divider>
+            <img src="https://placeimg.com/150/150/person" alt="selfImage" />
+            <h3>{userName}</h3>
             <div>
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry ...
             </div>
             <Link to="/project/write">
-              <Button type="primary" style={{ width: '100%' }}>
-                글쓰기
-              </Button>
+              <Button type="primary">글쓰기</Button>
             </Link>
-          </div>
+          </UserInfo>
         ) : (
-          <div style={{ paddingTop: '133px' }}>
+          <LoginBox>
             <div>로그인이 필요합니다.</div>
             <LoginModal buttonType="primary" />
-          </div>
+          </LoginBox>
         )}
       </AsideBox>
     </InnerContainer>

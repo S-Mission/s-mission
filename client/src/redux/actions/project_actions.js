@@ -1,3 +1,5 @@
+import { SEARCH_REQUEST } from 'redux/types/project_types';
+import { LOADING_USER_PROJECT_REQUEST } from 'redux/types/project_types';
 import { TOP_RATED_PROJECTS_REQUEST } from 'redux/types/project_types';
 import {
   PROJECT_WRITE_REQUEST,
@@ -44,6 +46,11 @@ export const readprojectAction = (data) => ({
   payload: data,
 });
 
+export const loadUserProjectAction = (userId) => ({
+  type: LOADING_USER_PROJECT_REQUEST,
+  payload: userId,
+});
+
 export const loadviewAction = (userID) => ({
   type: PROJECT_LOADVIEW_REQUEST,
   payload: userID,
@@ -52,4 +59,9 @@ export const loadviewAction = (userID) => ({
 export const upviewAction = (userID) => ({
   type: PROJECT_UPVIEW_REQUEST,
   payload: userID,
+});
+
+export const searchAction = (searchTerm) => ({
+  type: SEARCH_REQUEST,
+  payload: searchTerm,
 });

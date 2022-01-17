@@ -31,6 +31,11 @@ export const Logo = styled.a`
   font-size: 32px;
   margin-top: -8px;
   text-align: start;
+
+  & > img {
+    width: 64px;
+    height: 64px;
+  }
 `;
 
 export const MenuContainer = styled.div`

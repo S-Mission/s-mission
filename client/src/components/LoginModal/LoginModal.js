@@ -7,13 +7,10 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import GoogleLogin from 'react-google-login';
 import GoogleButton from 'react-google-button';
-
-// antd
 import { Modal, Form, Button, Input, Divider } from 'antd';
+import { PasswordBox, SignupBox } from './style';
 
 function LoginModal({ buttonType }) {
-  ///////////////////////////////////////////
-  // Modal Setting
   const [signInVisible, setSignInVisible] = useState(false);
 
   const showSignInModal = () => {
@@ -23,9 +20,6 @@ function LoginModal({ buttonType }) {
     setSignInVisible(false);
   };
 
-  ///////////////////////////////////////////
-  // Login Setting
-  // if modal closed, the values will be reset
   const [form, setValues] = useState({
     email: '',
     password: '',
@@ -42,7 +36,6 @@ function LoginModal({ buttonType }) {
     });
   };
 
-  // 작동 안함
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
@@ -69,7 +62,6 @@ function LoginModal({ buttonType }) {
     }
   };
 
-  // Google Login
   const responseGoogle = (res) => {
     const { email, name } = res.profileObj;
     const { tokenId } = res;
@@ -150,21 +142,21 @@ function LoginModal({ buttonType }) {
               </Button>
             </div>
             <br />
-            <div style={{ textAlign: 'center', marginBottom: '7px' }}>
+            <PasswordBox>
               <span>
                 <a href="/user/password" onClick={handleSignInCancel}>
                   Forgot a Password?
                 </a>
               </span>
-            </div>
-            <div style={{ textAlign: 'center' }}>
+            </PasswordBox>
+            <SignupBox>
               <span>Not a Member?&nbsp;&nbsp;</span>
               <span>
                 <a href="/user/signup" onClick={handleSignInCancel}>
                   Sign Up
                 </a>
               </span>
-            </div>
+            </SignupBox>
           </Form>
         </div>
       </Modal>

@@ -20,11 +20,7 @@ function Navbar() {
     <NavbarContainer>
       <Wrap>
         <Logo href="/">
-          <img
-            src={LogoImg}
-            style={{ width: '64px', height: '64px' }}
-            alt="logo"
-          />
+          <img src={LogoImg} alt="logo" />
         </Logo>
         <MenuContainer>
           <div>
