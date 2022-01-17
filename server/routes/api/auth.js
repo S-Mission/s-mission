@@ -9,7 +9,7 @@ const ejs = require('ejs');
 
 const { JWT_SECRET, NODEMAILER_USER, NODEMAILER_PASS } = config;
 const { User } = require('../../models/user');
-const { Project } = require('../../models/project');
+const { Post } = require('../../models/post');
 
 const router = express.Router();
 
@@ -125,7 +125,7 @@ router.post('/logout', (req, res) => {
 router.delete('/closeaccount/:id', async (req, res) => {
   try {
     await User.deleteOne({ _id: req.params.id });
-    await Project.deleteMany({ creator: req.params.id });
+    await Post.deleteMany({ creator: req.params.id });
 
     return res.status(200).json({ success: true });
   } catch (e) {

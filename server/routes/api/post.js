@@ -1,6 +1,6 @@
 const express = require('express');
 const { auth } = require('../../middleware/auth');
-const { Project } = require('../../models/project');
+const { Post } = require('../../models/post');
 const { Category } = require('../../models/category');
 const { User } = require('../../models/user');
 const { Comment } = require('../../models/comment');
@@ -36,50 +36,29 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).single('file');
 var uploadfile = multer({ dest: 'uploadedFiles/' }).single('file');
 
-// Project All //
+// Post All //
 router.get('/', async (req, res) => {
   try {
-    const projectFindResult = await Project.find()
-      .populate({
-        path: 'creator',
-      })
-      .limit(9)
-      .sort({ date: -1 });
-
-    const result = { projectFindResult };
+    const postFindResult = await Post.find().populate({
+      path: 'creator',
+    });
+    const result = { postFindResult };
     res.json(result);
   } catch (e) {
     console.log(e);
-    res.json({ msg: 'No Project' });
+    res.json({ msg: 'No Post' });
   }
 });
 
-// LOADING ALL PROJECTS / GET
-router.get('/skip/:skip', async (req, res) => {
-  try {
-    const projectCount = await Project.countDocuments();
-    const projectFindResult = await Project.find()
-      .skip(Number(req.params.skip))
-      .limit(12)
-      .sort({ date: -1 });
-
-    const result = { projectFindResult, projectCount };
-
-    res.json(result);
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-// Top Rate Projects
+// Top Rate Posts
 router.get('/topRate', async (req, res) => {
   try {
-    const projectResult = await Project.find().sort({ views: -1 });
+    const postResult = await Post.find().sort({ views: -1 });
 
-    res.json(projectResult);
+    res.json(postResult);
   } catch (e) {
     console.log(e);
-    res.json({ msg: 'No Project' });
+    res.json({ msg: 'No Post' });
   }
 });
 
@@ -109,7 +88,7 @@ router.post('/uploadfile', async (req, res) => {
   });
 });
 
-// Project Create //
+// Post Create //
 router.post('/write', auth, async (req, res) => {
   try {
     const { title, contents, category, previewImg, file, originalfileName } =
@@ -118,7 +97,7 @@ router.post('/write', auth, async (req, res) => {
     if (!contents) return res.status(400).json({ msg: '내용을 입력해주세요.' });
 
     // 새로운 프로젝트 생성
-    const newProject = await Project.create({
+    const newPost = await Post.create({
       title,
       contents,
       previewImg: previewImg,
@@ -137,37 +116,37 @@ router.post('/write', auth, async (req, res) => {
       const newCategory = await Category.create({
         categoryName: category,
       });
-      await Project.findByIdAndUpdate(newProject._id, {
+      await Post.findByIdAndUpdate(newPost._id, {
         $push: {
           category: newCategory._id,
         },
       });
       await Category.findByIdAndUpdate(newCategory._id, {
         $push: {
-          projects: newProject._id, //mongoDB는 _id로 저장
+          posts: newPost._id, //mongoDB는 _id로 저장
         },
       });
       await User.findByIdAndUpdate(req.user.id, {
         $push: {
-          projects: newProject._id,
+          posts: newPost._id,
         },
       });
     } else {
       // 카테고리가 존재하면 실행
       await Category.findByIdAndUpdate(categoryFindResult._id, {
-        $push: { projects: newProject._id },
+        $push: { posts: newPost._id },
       });
-      await Project.findByIdAndUpdate(newProject._id, {
+      await Post.findByIdAndUpdate(newPost._id, {
         $push: { category: categoryFindResult._id },
       });
       await User.findByIdAndUpdate(req.user.id, {
         $push: {
-          projects: newProject._id,
+          posts: newPost._id,
         },
       });
     }
 
-    res.redirect(`/api/project/${newProject._id}`);
+    res.redirect(`/api/post/${newPost._id}`);
   } catch (e) {
     console.log(e);
   }
@@ -210,31 +189,31 @@ router.get('/uploadedFiles/:originalFileName', async function (req, res) {
   }
 });
 
-// Project Detail //
+// Post Detail //
 router.get('/:id', async (req, res, next) => {
   try {
-    const project = await Project.findById(req.params.id)
+    const post = await Post.findById(req.params.id)
       .populate('creator')
       .populate({ path: 'category', select: 'categoryName' });
 
-    project.save();
+    post.save();
 
-    res.json(project);
+    res.json(post);
   } catch (e) {
     console.error(e);
     next(e);
   }
 });
 
-// Project Update //
+// Post Update //
 // 수정 페이지
 router.get('/:id/edit', async (req, res, next) => {
   try {
-    const project = await Project.findById(req.params.id)
+    const post = await Post.findById(req.params.id)
       .populate('creator')
       .populate({ path: 'category', select: 'categoryName' });
 
-    res.json(project);
+    res.json(post);
   } catch (e) {
     console.error(e);
   }
@@ -249,7 +228,7 @@ router.post('/:id/update', async (req, res, next) => {
       categoryName: category,
     });
     console.log('아이디', req.params.id);
-    const update_project = await Project.findByIdAndUpdate(
+    const update_post = await Post.findByIdAndUpdate(
       req.params.id,
       {
         title,
@@ -260,28 +239,28 @@ router.post('/:id/update', async (req, res, next) => {
       },
       { new: true },
     );
-    res.redirect(`/api/project/${update_project._id}`);
+    res.redirect(`/api/post/${update_post._id}`);
   } catch (e) {
     console.log(e);
   }
 });
 
-// Project Delete //
+// Post Delete //
 router.delete('/:id/delete', auth, async (req, res) => {
   try {
-    await Project.deleteMany({ _id: req.params.id });
+    await Post.deleteMany({ _id: req.params.id });
     const edit_category = await Category.findOneAndUpdate(
-      { projects: req.params.id },
-      { $pull: { projects: req.params.id } },
+      { posts: req.params.id },
+      { $pull: { posts: req.params.id } },
       { new: true },
     );
     await User.findByIdAndUpdate(req.user.id, {
       $pull: {
-        projects: req.params.id,
+        posts: req.params.id,
       },
     });
 
-    if (edit_category.projects.length === 0) {
+    if (edit_category.posts.length === 0) {
       await Category.deleteMany({ _id: edit_category });
     }
 
@@ -302,8 +281,8 @@ router.get('/category/:categoryName', async (req, res, next) => {
           $options: 'i',
         },
       },
-      'projects',
-    ).populate({ path: 'projects' });
+      'posts',
+    ).populate({ path: 'posts' });
 
     res.send(result);
   } catch (e) {
@@ -314,11 +293,11 @@ router.get('/category/:categoryName', async (req, res, next) => {
 // 해당 유저가 작성한 게시글
 router.get('/user/:id', async (req, res) => {
   try {
-    const project = await Project.find({
+    const post = await Post.find({
       creator: req.params.id,
     });
 
-    res.send(project);
+    res.send(post);
   } catch (e) {
     console.log(e);
   }
@@ -327,8 +306,8 @@ router.get('/user/:id', async (req, res) => {
 // Views Load //
 router.get('/:id/views', async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
-    const result = project.views;
+    const post = await Post.findById(req.params.id);
+    const result = post.views;
 
     res.json({ views: result });
   } catch (e) {
@@ -339,15 +318,15 @@ router.get('/:id/views', async (req, res) => {
 router.post('/:id/views', async (req, res) => {
   const userID = req.body.userID;
   try {
-    const project = await Project.findById(req.params.id);
-    const result = project.views + 1;
+    const post = await Post.findById(req.params.id);
+    const result = post.views + 1;
 
-    await Project.findByIdAndUpdate(req.params.id, {
+    await Post.findByIdAndUpdate(req.params.id, {
       views: result,
     });
 
     await User.findByIdAndUpdate(userID, {
-      views: project,
+      views: post,
     });
 
     res.json({ success: true, views: result });
@@ -356,10 +335,10 @@ router.post('/:id/views', async (req, res) => {
   }
 });
 
-//
+// VIEW COMMENT
 router.get('/:id/comments', async (req, res) => {
   try {
-    const comment = await Project.findById(req.params.id).populate({
+    const comment = await Post.findById(req.params.id).populate({
       path: 'comments',
     });
 
@@ -380,12 +359,12 @@ router.post('/:id/comments', async (req, res) => {
     contents: req.body.contents,
     creator: req.body.userId,
     creatorName: req.body.userName,
-    project: req.body.id,
+    post: req.body.id,
     date: moment().format('MMMM DD, YYYY'),
   });
 
   try {
-    await Project.findByIdAndUpdate(req.body.id, {
+    await Post.findByIdAndUpdate(req.body.id, {
       $push: {
         comments: newComment._id,
       },
@@ -394,7 +373,7 @@ router.post('/:id/comments', async (req, res) => {
     await User.findByIdAndUpdate(req.body.userId, {
       $push: {
         comments: {
-          project_id: req.body.id,
+          post_id: req.body.id,
           comment_id: newComment._id,
         },
       },
@@ -416,7 +395,7 @@ router.delete('/comment/:id', async (req, res) => {
       comments: { comment_id: req.params.id },
     },
   });
-  await Project.findOneAndUpdate(
+  await Post.findOneAndUpdate(
     { comments: req.params.id },
     {
       $pull: { comments: req.params.id },

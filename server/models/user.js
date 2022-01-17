@@ -24,23 +24,33 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: moment().format('MMMM DD, YYYY'),
   },
-  projects: [
+  posts: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'project',
+      ref: 'post',
     },
   ],
   views: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'project',
+      ref: 'post',
     },
   ],
+  pay_state: {
+    type: String,
+    required: true,
+    default: 'before',
+    enum: ['before', 'paid', 'cancelled'],
+  },
+  pay_date: {
+    type: Date,
+    default: moment().format('MMMM DD, YYYY'),
+  },
   comments: [
     {
-      project_id: {
+      post_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'project',
+        ref: 'post',
       },
       comment_id: {
         type: mongoose.Schema.Types.ObjectId,
