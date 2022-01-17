@@ -19,7 +19,7 @@ const ProjectSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  originalfileName : {
+  originalfileName: {
     type: Array,
     default: [],
   },

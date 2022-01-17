@@ -11,7 +11,7 @@ function SearchInput() {
     window.location.reload();
   };
 
-  return <SearchBox placeholder="Search" onSearch={onSearch} />;
+  return <SearchBox placeholder="Search by title" onSearch={onSearch} />;
 }
 
 export default SearchInput;

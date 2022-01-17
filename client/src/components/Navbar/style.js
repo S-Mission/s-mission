@@ -1,4 +1,4 @@
-import { Menu } from 'antd';
+import { Dropdown, Menu } from 'antd';
 import styled from 'styled-components';
 
 export const NavbarContainer = styled.div`
@@ -39,24 +39,8 @@ export const Logo = styled.a`
 `;
 
 export const MenuContainer = styled.div`
-  width: 35%;
+  width: 25%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   padding-top: 8px;
-
-  & > div {
-    width: 25%;
-
-    & > a {
-      color: #606f7b;
-      text-align: center;
-      transition: all 0.2s linear;
-    }
-    & > a:hover {
-      color: #7674f5;
-      border-bottom: 1px solid #7674f5;
-      padding-bottom: 4px;
-      transition: all 0.2s linear;
-    }
-  }
 `;

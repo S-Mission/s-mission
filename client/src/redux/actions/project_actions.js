@@ -1,6 +1,3 @@
-import { SEARCH_REQUEST } from 'redux/types/project_types';
-import { LOADING_USER_PROJECT_REQUEST } from 'redux/types/project_types';
-import { TOP_RATED_PROJECTS_REQUEST } from 'redux/types/project_types';
 import {
   PROJECT_WRITE_REQUEST,
   PROJECT_DETAIL_REQUEST,
@@ -10,6 +7,10 @@ import {
   PROJECT_DELETE_REQUEST,
   PROJECT_LOADVIEW_REQUEST,
   PROJECT_UPVIEW_REQUEST,
+  TOP_RATED_PROJECTS_REQUEST,
+  LOADING_USER_PROJECT_REQUEST,
+  ALL_PROJECT_LOADING_REQUEST,
+  SEARCH_REQUEST,
 } from 'redux/types/project_types';
 
 export const createprojectAction = (data) => ({
@@ -43,6 +44,11 @@ export const deleteprojectAction = (data) => ({
 
 export const readprojectAction = (data) => ({
   type: PROJECT_LOADING_REQUEST,
+  payload: data,
+});
+
+export const readAllProjectsAction = (data) => ({
+  type: ALL_PROJECT_LOADING_REQUEST,
   payload: data,
 });
 

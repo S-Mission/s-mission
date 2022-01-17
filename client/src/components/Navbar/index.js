@@ -3,7 +3,8 @@ import LogoImg from './logo.png';
 import { useSelector } from 'react-redux';
 
 // antd
-import { Button } from 'antd';
+import { Button, Dropdown, Menu } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 // style
 import { Logo, MenuContainer, NavbarContainer, Wrap } from './style';
@@ -13,6 +14,28 @@ import LoginModal from 'components/LoginModal/LoginModal';
 import SearchInput from 'components/SearchInput';
 import { Link } from 'react-router-dom';
 
+const menu = (
+  <Menu style={{ marginTop: '-32px' }}>
+    <Menu.Item>
+      <Link to="/project/category/web">Web</Link>
+    </Menu.Item>
+    <Menu.Item>
+      <Link to="/project/category/android">Android</Link>
+    </Menu.Item>
+    <Menu.Item>
+      <Link to="/project/category/ios">iOS</Link>
+    </Menu.Item>
+    <Menu.Item>
+      <Link to="/project/category/bigdata">Big data</Link>
+    </Menu.Item>
+    <Menu.Item>
+      <Link to="/project/category/ai">AI</Link>
+    </Menu.Item>
+    <Menu.Item>
+      <Link to="/project/category/design">Design</Link>
+    </Menu.Item>
+  </Menu>
+);
 function Navbar() {
   const { isAuthenticated, userId } = useSelector((state) => state.auth);
 
@@ -23,24 +46,22 @@ function Navbar() {
           <img src={LogoImg} alt="logo" />
         </Logo>
         <MenuContainer>
-          <div>
-            <Link to="/project/category/web">Web</Link>
-          </div>
-          <div>
-            <Link to="/project/category/android">Android</Link>
-          </div>
-          <div>
-            <Link to="/project/category/ios">iOS</Link>
-          </div>
-          <div>
-            <Link to="/project/category/bigdata">Big data</Link>
-          </div>
-          <div>
-            <Link to="/project/category/ai">AI</Link>
-          </div>
-          <div>
-            <Link to="/project/category/design">Design</Link>
-          </div>
+          <Dropdown overlay={menu} placement="bottomCenter">
+            <a
+              className="ant-dropdown-link"
+              onClick={(e) => e.preventDefault()}
+              style={{ color: 'black' }}
+            >
+              Category
+              <DownOutlined style={{ paddingLeft: '4px' }} />
+            </a>
+          </Dropdown>
+          <Link
+            to="/manage/overview"
+            style={{ marginLeft: '32px', color: 'black' }}
+          >
+            My projects
+          </Link>
         </MenuContainer>
         <SearchInput />
         <LoginModal buttonType="default" />

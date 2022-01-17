@@ -1,15 +1,7 @@
 import axios from 'axios';
-import { push } from 'connected-react-router';
 import { all, call, put, takeEvery, fork } from 'redux-saga/effects';
-import { SEARCH_SUCCESS } from 'redux/types/project_types';
-import { LOADING_USER_PROJECT_SUCCESS } from 'redux/types/project_types';
-import { LOADING_USER_PROJECT_REQUEST } from 'redux/types/project_types';
-import { LOADING_USER_PROJECT_FAILURE } from 'redux/types/project_types';
-import { SEARCH_REQUEST } from 'redux/types/project_types';
-import { SEARCH_FAILURE } from 'redux/types/project_types';
-import { TOP_RATED_PROJECTS_REQUEST } from 'redux/types/project_types';
-import { TOP_RATED_PROJECTS_FAILURE } from 'redux/types/project_types';
-import { TOP_RATED_PROJECTS_SUCCESS } from 'redux/types/project_types';
+import { ALL_PROJECT_LOADING_REQUEST } from 'redux/types/project_types';
+import { ALL_PROJECT_LOADING_FAILURE } from 'redux/types/project_types';
 import {
   PROJECT_WRITE_REQUEST,
   PROJECT_WRITE_SUCCESS,
@@ -38,7 +30,42 @@ import {
   PROJECT_UPVIEW_REQUEST,
   PROJECT_UPVIEW_SUCCESS,
   PROJECT_UPVIEW_FAILURE,
+  LOADING_USER_PROJECT_SUCCESS,
+  LOADING_USER_PROJECT_REQUEST,
+  LOADING_USER_PROJECT_FAILURE,
+  SEARCH_REQUEST,
+  SEARCH_SUCCESS,
+  SEARCH_FAILURE,
+  TOP_RATED_PROJECTS_REQUEST,
+  TOP_RATED_PROJECTS_FAILURE,
+  TOP_RATED_PROJECTS_SUCCESS,
+  ALL_PROJECT_LOADING_SUCCESS,
 } from 'redux/types/project_types';
+
+// All Posts Load
+const loadProjectsAPI = (payload) => {
+  return axios.get(`/api/project/skip/${payload}`);
+};
+
+function* loadProjects(action) {
+  try {
+    const result = yield call(loadProjectsAPI, action.payload);
+
+    yield put({
+      type: ALL_PROJECT_LOADING_SUCCESS,
+      payload: result.data,
+    });
+  } catch (e) {
+    yield put({
+      type: ALL_PROJECT_LOADING_FAILURE,
+      payload: e,
+    });
+  }
+}
+
+function* watchloadProjects() {
+  yield takeEvery(ALL_PROJECT_LOADING_REQUEST, loadProjects);
+}
 
 // CREATE project
 const createProjectAPI = (payload) => {
@@ -106,7 +133,7 @@ function* watchprojectDetail() {
 
 // READ project // All
 const allprojectAPI = () => {
-  return axios.get(`/api/project`);
+  return axios.get('/api/project');
 };
 
 function* allProject(action) {
@@ -397,6 +424,7 @@ export default function* projectSaga() {
     fork(watchCategoryFind),
     fork(watchSearchResult),
     fork(watchloadUserProject),
+    fork(watchloadProjects),
     // view
     fork(watchprojectloadview),
     fork(watchprojectupview),

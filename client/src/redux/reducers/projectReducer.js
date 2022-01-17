@@ -2,6 +2,9 @@ import { TOP_RATED_PROJECTS_SUCCESS } from 'redux/types/project_types';
 import { SEARCH_REQUEST } from 'redux/types/project_types';
 import { SEARCH_FAILURE } from 'redux/types/project_types';
 import { LOADING_USER_PROJECT_SUCCESS } from 'redux/types/project_types';
+import { ALL_PROJECT_LOADING_REQUEST } from 'redux/types/project_types';
+import { ALL_PROJECT_LOADING_FAILURE } from 'redux/types/project_types';
+import { ALL_PROJECT_LOADING_SUCCESS } from 'redux/types/project_types';
 import { LOADING_USER_PROJECT_FAILURE } from 'redux/types/project_types';
 import { LOADING_USER_PROJECT_REQUEST } from 'redux/types/project_types';
 import { SEARCH_SUCCESS } from 'redux/types/project_types';
@@ -38,6 +41,7 @@ const initialState = {
   isAuthenticated: null,
   isLoading: false,
   projects: [],
+  projectList: [],
   topRated: [],
   projectdetail: '',
   is_project: false,
@@ -54,6 +58,7 @@ const initialState = {
   searchResult: '',
   searchBy: '',
   userProject: [],
+  projectCount: '',
 };
 
 const projectReducer = (state = initialState, action) => {
@@ -67,11 +72,27 @@ const projectReducer = (state = initialState, action) => {
     case PROJECT_UPVIEW_REQUEST:
     case TOP_RATED_PROJECTS_REQUEST:
     case LOADING_USER_PROJECT_REQUEST:
+    case ALL_PROJECT_LOADING_REQUEST:
       return {
         ...state,
         isLoading: true,
       };
 
+    case ALL_PROJECT_LOADING_SUCCESS:
+      return {
+        ...state,
+        projectList: [
+          ...state.projectList,
+          ...action.payload.projectFindResult,
+        ],
+        projectCount: action.payload.projectCount,
+        isLoading: false,
+      };
+    case ALL_PROJECT_LOADING_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+      };
     case PROJECT_EDITPAGE_SUCCESS:
       return {
         ...state,
@@ -204,7 +225,8 @@ const projectReducer = (state = initialState, action) => {
     case SEARCH_SUCCESS:
       return {
         ...state,
-        searchResult: action.payload,
+        searchResult: [...state.searchResult, ...action.payload.searchResult],
+        searchCount: action.payload.searchCount,
         isLoading: false,
       };
     case SEARCH_FAILURE:

@@ -1,21 +1,67 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
-import { Col, Row } from 'antd';
 import { OfficeContainer, CardContent, CardContainer, CardWrap } from './style';
-import { readprojectAction } from 'redux/actions/project_actions';
 import { Link } from 'react-router-dom';
+import { readAllProjectsAction } from 'redux/actions/project_actions';
+import { Button, Spin } from 'antd';
 
 function ProjectList() {
-  const { projects } = useSelector((state) => state.project);
+  const { projectList, projectCount, isLoading } = useSelector(
+    (state) => state.project,
+  );
 
   const dispatch = useDispatch();
-  useLayoutEffect(() => {
-    dispatch(readprojectAction(0));
+
+  useEffect(() => {
+    dispatch(readAllProjectsAction(0));
   }, [dispatch]);
 
-  const projectCard = projects
-    ? projects.map((project, index) => {
+  const skipNumberRef = useRef(0);
+  const projectCountRef = useRef(0);
+  const endMsg = useRef(false);
+
+  projectCountRef.current = projectCount - 12;
+
+  const useOnScreen = (options) => {
+    const lastProjectElementRef = useRef();
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          let remainProjectCount =
+            projectCountRef.current - skipNumberRef.current;
+
+          if (remainProjectCount >= 0) {
+            dispatch(readAllProjectsAction(skipNumberRef.current + 12));
+            skipNumberRef.current += 6;
+          } else {
+            endMsg.current = true;
+          }
+        }
+      }, options);
+
+      if (lastProjectElementRef.current) {
+        observer.observe(lastProjectElementRef.current);
+      }
+
+      const LastElementReturnFunc = () => {
+        if (lastProjectElementRef.current) {
+          observer.unobserve(lastProjectElementRef.current);
+        }
+      };
+
+      return LastElementReturnFunc;
+    }, [lastProjectElementRef, options]);
+
+    return [lastProjectElementRef];
+  };
+
+  const [lastProjectElementRef] = useOnScreen({
+    threshold: '0.5',
+  });
+
+  const projectCard = projectList
+    ? projectList.map((project, index) => {
         var content = project.contents.replace(
           /<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/gi,
           '',
@@ -40,6 +86,21 @@ function ProjectList() {
   return (
     <OfficeContainer>
       <CardContainer>{projectCard}</CardContainer>
+      <div
+        ref={lastProjectElementRef}
+        style={{ display: 'flex', justifyContent: 'center' }}
+      >
+        {isLoading && <Spin tip="Loading..."></Spin>}
+      </div>
+      {isLoading ? (
+        ''
+      ) : endMsg ? (
+        <Button style={{ width: '100%' }} type="danger">
+          <div>더 이상의 게시글이 없습니다.</div>
+        </Button>
+      ) : (
+        ''
+      )}
     </OfficeContainer>
   );
 }

@@ -39,14 +39,35 @@ var uploadfile = multer({ dest: 'uploadedFiles/' }).single('file');
 // Project All //
 router.get('/', async (req, res) => {
   try {
-    const projectFindResult = await Project.find().populate({
-      path: 'creator',
-    });
+    const projectFindResult = await Project.find()
+      .populate({
+        path: 'creator',
+      })
+      .limit(9)
+      .sort({ date: -1 });
+
     const result = { projectFindResult };
     res.json(result);
   } catch (e) {
     console.log(e);
     res.json({ msg: 'No Project' });
+  }
+});
+
+// LOADING ALL PROJECTS / GET
+router.get('/skip/:skip', async (req, res) => {
+  try {
+    const projectCount = await Project.countDocuments();
+    const projectFindResult = await Project.find()
+      .skip(Number(req.params.skip))
+      .limit(12)
+      .sort({ date: -1 });
+
+    const result = { projectFindResult, projectCount };
+
+    res.json(result);
+  } catch (e) {
+    console.log(e);
   }
 });
 

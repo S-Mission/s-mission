@@ -13,8 +13,9 @@ function ProjectContainer() {
   const { projects } = useSelector((state) => state.project);
 
   const dispatch = useDispatch();
+
   useLayoutEffect(() => {
-    dispatch(readprojectAction(0));
+    dispatch(readprojectAction());
   }, [dispatch]);
 
   const projectCard = projects

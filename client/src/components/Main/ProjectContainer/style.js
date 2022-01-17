@@ -19,6 +19,7 @@ export const CardContainer = styled.div`
   display: flex;
   margin: -1rem;
   flex-wrap: wrap;
+  margin-bottom: 16px;
 `;
 
 export const CardWrap = styled.div`
