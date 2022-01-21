@@ -2,37 +2,34 @@ import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { OfficeContainer, CardContent, CardContainer, CardWrap } from './style';
 import { Link } from 'react-router-dom';
-import { readAllProjectsAction } from 'redux/actions/project_actions';
+import { readAllPostsAction } from 'redux/actions/post_actions';
 import { Button, Spin } from 'antd';
 
-function ProjectList() {
-  const { projectList, projectCount, isLoading } = useSelector(
-    (state) => state.project,
-  );
+function PostList() {
+  const { postList, postCount, isLoading } = useSelector((state) => state.post);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(readAllProjectsAction(0));
+    dispatch(readAllPostsAction(0));
   }, [dispatch]);
 
   const skipNumberRef = useRef(0);
-  const projectCountRef = useRef(0);
+  const postCountRef = useRef(0);
   const endMsg = useRef(false);
 
-  projectCountRef.current = projectCount - 12;
+  postCountRef.current = postCount - 12;
 
   const useOnScreen = (options) => {
-    const lastProjectElementRef = useRef();
+    const lastPostElementRef = useRef();
 
     useEffect(() => {
       const observer = new IntersectionObserver(([entry]) => {
         if (entry.isIntersecting) {
-          let remainProjectCount =
-            projectCountRef.current - skipNumberRef.current;
+          let remainPostCount = postCountRef.current - skipNumberRef.current;
 
-          if (remainProjectCount >= 0) {
-            dispatch(readAllProjectsAction(skipNumberRef.current + 12));
+          if (remainPostCount >= 0) {
+            dispatch(readAllPostsAction(skipNumberRef.current + 12));
             skipNumberRef.current += 6;
           } else {
             endMsg.current = true;
@@ -40,37 +37,37 @@ function ProjectList() {
         }
       }, options);
 
-      if (lastProjectElementRef.current) {
-        observer.observe(lastProjectElementRef.current);
+      if (lastPostElementRef.current) {
+        observer.observe(lastPostElementRef.current);
       }
 
       const LastElementReturnFunc = () => {
-        if (lastProjectElementRef.current) {
-          observer.unobserve(lastProjectElementRef.current);
+        if (lastPostElementRef.current) {
+          observer.unobserve(lastPostElementRef.current);
         }
       };
 
       return LastElementReturnFunc;
-    }, [lastProjectElementRef, options]);
+    }, [lastPostElementRef, options]);
 
-    return [lastProjectElementRef];
+    return [lastPostElementRef];
   };
 
-  const [lastProjectElementRef] = useOnScreen({
+  const [lastPostElementRef] = useOnScreen({
     threshold: '0.5',
   });
 
-  const projectCard = projectList
-    ? projectList.map((project, index) => {
-        var content = project.contents.replace(
+  const postCard = postList
+    ? postList.map((post, index) => {
+        var content = post.contents.replace(
           /<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/gi,
           '',
         );
         return (
           <CardWrap key={index}>
-            <Link to={`/project/detail/${project._id}`}>
-              <CardContent title={project.title}>
-                <p>{project.creator.name}</p>
+            <Link to={`/post/detail/${post._id}`}>
+              <CardContent title={post.title}>
+                <p>{post.creator.name}</p>
                 <p>
                   {content.length > 80
                     ? content.slice(0, 80) + ' ...'
@@ -85,9 +82,9 @@ function ProjectList() {
 
   return (
     <OfficeContainer>
-      <CardContainer>{projectCard}</CardContainer>
+      <CardContainer>{postCard}</CardContainer>
       <div
-        ref={lastProjectElementRef}
+        ref={lastPostElementRef}
         style={{ display: 'flex', justifyContent: 'center' }}
       >
         {isLoading && <Spin tip="Loading..."></Spin>}
@@ -105,4 +102,4 @@ function ProjectList() {
   );
 }
 
-export default ProjectList;
+export default PostList;

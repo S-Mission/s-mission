@@ -6,29 +6,29 @@ import { Button } from 'antd';
 // style
 import { OfficeContainer, CardContent, CardContainer, CardWrap } from './style';
 
-import { readprojectAction } from 'redux/actions/project_actions';
+import { readpostAction } from 'redux/actions/post_actions';
 import { Link } from 'react-router-dom';
 
-function ProjectContainer() {
-  const { projects } = useSelector((state) => state.project);
+function PostContainer() {
+  const { posts } = useSelector((state) => state.post);
 
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
-    dispatch(readprojectAction());
+    dispatch(readpostAction());
   }, [dispatch]);
 
-  const projectCard = projects
-    ? projects.slice(0, 9).map((project, index) => {
-        var content = project.contents.replace(
+  const postCard = posts
+    ? posts.slice(0, 9).map((post, index) => {
+        var content = post.contents.replace(
           /<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/gi,
           '',
         );
         return (
           <CardWrap key={index}>
-            <Link to={`/project/detail/${project._id}`}>
-              <CardContent title={project.title}>
-                <p>{project.creator.name}</p>
+            <Link to={`/post/detail/${post._id}`}>
+              <CardContent title={post.title}>
+                <p>{post.creator.name}</p>
                 <p>
                   {content.length > 80
                     ? content.slice(0, 80) + ' ...'
@@ -43,12 +43,12 @@ function ProjectContainer() {
 
   return (
     <OfficeContainer>
-      <CardContainer>{projectCard}</CardContainer>
-      <a href="/project">
+      <CardContainer>{postCard}</CardContainer>
+      <a href="/post">
         <Button type="primary">더보기</Button>
       </a>
     </OfficeContainer>
   );
 }
 
-export default ProjectContainer;
+export default PostContainer;

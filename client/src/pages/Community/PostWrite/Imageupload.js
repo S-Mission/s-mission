@@ -11,16 +11,16 @@ function Imageupload(props) {
   const onDrop = (files) => {
     let formData = new FormData();
     const config = {
-      header: {'content-type': 'multipart/form-data'}
-    }
+      header: { 'content-type': 'multipart/form-data' },
+    };
     formData.append('file', files[0]);
 
-    Axios.post('/api/project/uploadimage', formData, config).then((res) => {
+    Axios.post('/api/post/uploadimage', formData, config).then((res) => {
       if (res.data.success) {
         setImages([...Images, res.data.image]);
         props.refreshFunction([...Images, res.data.image]);
       } else {
-        alert("이미지 업로드 실패");
+        alert('이미지 업로드 실패');
       }
     });
   };
@@ -38,7 +38,11 @@ function Imageupload(props) {
       <div>
         {Images.map((image, index) => (
           <div key={index}>
-            <img src={`http://localhost:7000/${image}`} alt={`${image}`} style={{ width: '300px'}} />
+            <img
+              src={`http://localhost:7000/${image}`}
+              alt={`${image}`}
+              style={{ width: '300px' }}
+            />
           </div>
         ))}
       </div>

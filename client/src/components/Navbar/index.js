@@ -17,22 +17,22 @@ import { Link } from 'react-router-dom';
 const menu = (
   <Menu style={{ marginTop: '-32px' }}>
     <Menu.Item>
-      <Link to="/project/category/web">Web</Link>
+      <Link to="/post/category/web">Web</Link>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/project/category/android">Android</Link>
+      <Link to="/post/category/android">Android</Link>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/project/category/ios">iOS</Link>
+      <Link to="/post/category/ios">iOS</Link>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/project/category/bigdata">Big data</Link>
+      <Link to="/post/category/bigdata">Big data</Link>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/project/category/ai">AI</Link>
+      <Link to="/post/category/ai">AI</Link>
     </Menu.Item>
     <Menu.Item>
-      <Link to="/project/category/design">Design</Link>
+      <Link to="/post/category/design">Design</Link>
     </Menu.Item>
   </Menu>
 );
@@ -60,7 +60,7 @@ function Navbar() {
             to="/manage/overview"
             style={{ marginLeft: '32px', color: 'black' }}
           >
-            My projects
+            My posts
           </Link>
         </MenuContainer>
         <SearchInput />

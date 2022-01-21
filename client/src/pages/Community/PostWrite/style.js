@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ProjectWriteContainer = styled.div`
+export const PostWriteContainer = styled.div`
   width: 90%;
   margin-left: 5%;
   margin-top: 64px;
