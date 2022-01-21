@@ -42,9 +42,8 @@ export const deletepostAction = (data) => ({
   payload: data,
 });
 
-export const readpostAction = (data) => ({
+export const readpostAction = () => ({
   type: POST_LOADING_REQUEST,
-  payload: data,
 });
 
 export const readAllPostsAction = (data) => ({

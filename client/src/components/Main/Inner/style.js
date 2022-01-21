@@ -31,7 +31,7 @@ export const NavButton = styled(Button)`
 export const CardContainer = styled.div`
   margin-top: 32px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
 `;
 
 export const CardContent = styled(Card)`

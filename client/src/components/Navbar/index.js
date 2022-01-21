@@ -36,6 +36,7 @@ const menu = (
     </Menu.Item>
   </Menu>
 );
+
 function Navbar() {
   const { isAuthenticated, userId } = useSelector((state) => state.auth);
 
@@ -60,7 +61,7 @@ function Navbar() {
             to="/manage/overview"
             style={{ marginLeft: '32px', color: 'black' }}
           >
-            My posts
+            My Projects
           </Link>
         </MenuContainer>
         <SearchInput />

@@ -39,10 +39,33 @@ var uploadfile = multer({ dest: 'uploadedFiles/' }).single('file');
 // Post All //
 router.get('/', async (req, res) => {
   try {
-    const postFindResult = await Post.find().populate({
-      path: 'creator',
-    });
+    const postFindResult = await Post.find()
+      .populate({
+        path: 'creator',
+      })
+      .limit(9)
+      .sort({ date: -1 });
+
     const result = { postFindResult };
+
+    res.json(result);
+  } catch (e) {
+    console.log(e);
+    res.json({ msg: 'No Post' });
+  }
+});
+
+// LOADING ALL POSTS / GET
+router.get('/skip/:skip', async (req, res) => {
+  try {
+    const postCount = await Post.countDocuments();
+    const postFindResult = await Post.find()
+      .skip(Number(req.params.skip))
+      .limit(12)
+      .sort({ date: -1 });
+
+    const result = { postFindResult, postCount };
+
     res.json(result);
   } catch (e) {
     console.log(e);
