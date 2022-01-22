@@ -21,44 +21,45 @@ import { FolderOpenOutlined } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  detailprojectAction,
-  deleteprojectAction,
+  detailpostAction,
+  deletepostAction,
   loadviewAction,
   upviewAction,
-} from 'redux/actions/project_actions';
+} from 'redux/actions/post_actions';
 import Comments from 'components/Comment/Comments';
 import { Link } from 'react-router-dom';
 import { loadcommentAction } from 'redux/actions/comment_actions';
 import { deletecommentAction } from 'redux/actions/comment_actions';
 
-function ProjectDetail(req) {
+function PostDetail(req) {
   const images = [];
-  
-  const { projectdetail, creator, is_project, category, preimages } =
-    useSelector((state) => state.project);
+
+  const { postdetail, creator, is_post, category, preimages } = useSelector(
+    (state) => state.post,
+  );
   const { userId, userName } = useSelector((state) => state.auth);
   const { comments } = useSelector((state) => state.comment);
 
-  const { contents, date, previewImg, title, views } = projectdetail;
+  const { contents, date, previewImg, title, views } = postdetail;
   const dispatch = useDispatch();
-  const projectID = req.match.params.id;
+  const postID = req.match.params.id;
 
   const data = {
     userID: userId,
-    projectID: projectID,
+    postID: postID,
   };
 
   useLayoutEffect(() => {
     dispatch(loadviewAction(data));
     dispatch(upviewAction(data));
-    dispatch(loadcommentAction(projectID));
-  }, [dispatch, projectID]);
+    dispatch(loadcommentAction(postID));
+  }, [dispatch, postID]);
 
   useEffect(() => {
-    dispatch(detailprojectAction(projectID));
-  }, [dispatch, projectID]);
+    dispatch(detailpostAction(postID));
+  }, [dispatch, postID]);
 
-  const listimage =  preimages
+  const listimage = preimages
     ? preimages.map((item) => {
         images.push({
           original: `http://localhost:7000/${item}`,
@@ -74,9 +75,9 @@ function ProjectDetail(req) {
 
     if (result) {
       const token = localStorage.getItem('token');
-      const body = { token, projectID };
+      const body = { token, postID };
 
-      dispatch(deleteprojectAction(body));
+      dispatch(deletepostAction(body));
 
       req.history.push('1');
     }
@@ -90,20 +91,20 @@ function ProjectDetail(req) {
         const data = {
           userId,
           commentId,
-          projectId: projectID,
+          postId: postID,
           token: localStorage.getItem('token'),
         };
 
         dispatch(deletecommentAction(data));
       }
     },
-    [dispatch, userId, projectID],
+    [dispatch, userId, postID],
   );
 
   // 글 수정, 삭제
   const EditDelete_Button = (
     <EditDeleteContainer>
-      <Link to={`/project/edit/${projectID}`}>
+      <Link to={`/post/edit/${postID}`}>
         <Button>글 수정하기</Button>
       </Link>
       <Button
@@ -119,7 +120,7 @@ function ProjectDetail(req) {
   return (
     <DetailContainer>
       <Wrap>
-        {is_project ? (
+        {is_post ? (
           <>
             <LeftSide>
               <Title>{title}</Title>
@@ -154,17 +155,13 @@ function ProjectDetail(req) {
                       justifyContent: 'flex-end',
                     }}
                   >
-                    <Button onClick={() => (window.location.href = '/project')}>
+                    <Button onClick={() => (window.location.href = '/post')}>
                       목록
                     </Button>
                   </div>
                 </ContentContainer>
                 <CommentContainer>
-                  <Comments
-                    id={projectID}
-                    userId={userId}
-                    userName={userName}
-                  />
+                  <Comments id={postID} userId={userId} userName={userName} />
                   <div
                     style={{
                       marginTop: '16px',
@@ -230,13 +227,14 @@ function ProjectDetail(req) {
                 ''
               )}
               <FileContainer>
-                {projectdetail.files ?
-                  projectdetail.originalfileName.map((file, idx) => 
-                    <div key={idx}>
-                      <FolderOpenOutlined />
-                      &nbsp;{projectdetail.originalfileName[idx]}
-                    </div>
-                  ): ""}
+                {postdetail.files
+                  ? postdetail.originalfileName.map((file, idx) => (
+                      <div key={idx}>
+                        <FolderOpenOutlined />
+                        &nbsp;{postdetail.originalfileName[idx]}
+                      </div>
+                    ))
+                  : ''}
               </FileContainer>
               {userId === creator._id ? EditDelete_Button : <></>}
             </RightSide>
@@ -258,4 +256,4 @@ function ProjectDetail(req) {
   );
 }
 
-export default ProjectDetail;
+export default PostDetail;

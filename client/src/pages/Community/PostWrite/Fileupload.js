@@ -5,8 +5,9 @@ import { UploadOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import Dropzone from 'react-dropzone';
 
-function Imageupload(props) {
-  const [Images, setImages] = useState([]);
+function Fileupload(props) {
+  const [Files, setFiles] = useState([]);
+  const [fileoriginalname, setfileoriginalname] = useState([]);
 
   const onDrop = (files) => {
     let formData = new FormData();
@@ -15,12 +16,17 @@ function Imageupload(props) {
     };
     formData.append('file', files[0]);
 
-    Axios.post('/api/project/uploadimage', formData, config).then((res) => {
+    Axios.post('/api/post/uploadfile', formData, config).then((res) => {
       if (res.data.success) {
-        setImages([...Images, res.data.image]);
-        props.refreshFunction([...Images, res.data.image]);
+        setFiles([...Files, res.data.filedest]);
+        setfileoriginalname([...fileoriginalname, res.data.filename]);
+        props.refreshFunction(
+          [...Files, res.data.filedest],
+          [...fileoriginalname, res.data.filename],
+        );
+        console.log(res.data);
       } else {
-        alert('이미지 업로드 실패');
+        alert('파일 업로드 실패');
       }
     });
   };
@@ -36,18 +42,12 @@ function Imageupload(props) {
         )}
       </Dropzone>
       <div>
-        {Images.map((image, index) => (
-          <div key={index}>
-            <img
-              src={`http://localhost:7000/${image}`}
-              alt={`${image}`}
-              style={{ width: '300px' }}
-            />
-          </div>
+        {Files.map((file, index) => (
+          <div key={index}>{file}</div>
         ))}
       </div>
     </>
   );
 }
 
-export default Imageupload;
+export default Fileupload;

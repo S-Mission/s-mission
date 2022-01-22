@@ -6,9 +6,9 @@ import {
 } from 'redux/types/comment_types';
 
 // Load
-export const loadcommentAction = (projectID) => ({
+export const loadcommentAction = (postID) => ({
   type: COMMENT_LOADING_REQUEST,
-  payload: projectID,
+  payload: postID,
 });
 
 // Create

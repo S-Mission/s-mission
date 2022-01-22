@@ -10,7 +10,7 @@ import {
   Right,
   Wrap,
 } from './style';
-import { loadUserProjectAction } from 'redux/actions/project_actions';
+import { loadUserPostAction } from 'redux/actions/post_actions';
 import Modal from 'antd/lib/modal/Modal';
 
 const columns = [
@@ -22,7 +22,7 @@ const columns = [
     align: 'center',
     render: (title, record) => (
       <div style={{ textAlign: 'start' }}>
-        <Link to={`/project/detail/${record._id}`} style={{ color: 'black' }}>
+        <Link to={`/post/detail/${record._id}`} style={{ color: 'black' }}>
           {title.length >= 80 ? title.slice(0, 80) + '...' : title}
         </Link>
       </div>
@@ -55,12 +55,12 @@ function MyPage() {
   };
 
   const { userId, user, isAuthenticated } = useSelector((state) => state.auth);
-  const { userProject } = useSelector((state) => state.project);
+  const { userPost } = useSelector((state) => state.post);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadUserProjectAction(userId));
+    dispatch(loadUserPostAction(userId));
   }, [dispatch, userId]);
 
   return (
@@ -83,7 +83,7 @@ function MyPage() {
 
           <Right>
             <h2>작성한 게시글</h2>
-            <Table columns={columns} dataSource={userProject} />
+            <Table columns={columns} dataSource={userPost} />
             <ButtonContainer>
               <Link to="">회원 정보 수정하기</Link>
               <Link to={`/user/closeaccount/${userId}`}>회원 탈퇴하기</Link>

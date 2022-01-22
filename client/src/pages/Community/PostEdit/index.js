@@ -1,29 +1,40 @@
-import React, { useState, useLayoutEffect, createRef } from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Input, Button, Select } from 'antd';
-import { createprojectAction } from 'redux/actions/project_actions';
+import { updatepostAction, editpostAction } from 'redux/actions/post_actions';
+import { Form, Input, Button, Upload, Select } from 'antd';
+import Imageupload from './Imageupload';
 
 // Editor
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
 
-import { PostWriteHeader, ProjectWriteContainer } from './style';
+import { PostWriteHeader, PostWriteContainer } from './style';
 
-import Imageupload from './Imageupload';
-import Fileupload from './Fileupload';
 const { Option } = Select;
+function PostEdit(req) {
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
-function ProjectWrite() {
+  const { postdetail, category, title, contents, preimages } = useSelector(
+    (state) => state.post,
+  );
+
+  const normFile = (e) => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
   const [form, setForm] = useState({
-    title: '',
-    contents: '',
-    previewImg: [],
-    file : [],
-    originalfileName : [],
-    category: '',
+    title: `${postdetail.title == undefined ? title : postdetail.title}`,
+    contents: `${
+      postdetail.contents == undefined ? contents : postdetail.contents
+    }`,
+    category: `${category.categoryName}`,
   });
+  const [Image, setImage] = useState([]);
 
-  // Change //
   const onValueChange = (e) => {
     setForm({
       ...form,
@@ -31,12 +42,7 @@ function ProjectWrite() {
     });
   };
 
-  const onSelectChange = (v) => {
-    setForm({
-      ...form,
-      category: v,
-    });
-  };
+  const editorRef = createRef();
 
   const onEditorChange = () => {
     const val = editorRef.current.getInstance().getHTML();
@@ -47,48 +53,37 @@ function ProjectWrite() {
   };
 
   const onImageChange = (image) => {
-    setForm({
-      ...form,
-      previewImg: image,
-    });
+    setImage(image);
   };
 
-  const onFileChange = (file, filename) => {
-    setForm({
-      ...form,
-      file: file,
-      originalfileName: filename
-    });
-  }
-
-  const { isAuthenticated } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const editorRef = createRef();
+
+  useEffect(() => {
+    dispatch(editpostAction(req.match.params.id));
+  }, [req.match.params.id]);
 
   const onSubmit = async (e) => {
-    const { title, contents, category, previewImg, file, originalfileName} = form;
+    await e.preventDefault();
+    const { title, contents, category } = form;
     const token = localStorage.getItem('token');
     let data = {
       title,
       contents,
-      previewImg,
+      Image,
       category,
       token,
-      file,
-      originalfileName
+      id: req.match.params.id,
     };
 
-    dispatch(createprojectAction(data));
+    dispatch(updatepostAction(data));
   };
 
-  useLayoutEffect(() => {}, [dispatch]);
-
   return (
-    <ProjectWriteContainer>
-      <PostWriteHeader>글 작성하기</PostWriteHeader>
+    <PostWriteContainer>
+      <PostWriteHeader>글 수정하기</PostWriteHeader>
       {/* 인증한 사용자만 볼 수 있음 */}
       {isAuthenticated ? (
-        <Form onFinish={onSubmit}>
+        <Form>
           <Form.Item
             name={'title'}
             rules={[{ required: true }]}
@@ -98,15 +93,16 @@ function ProjectWrite() {
               name="title"
               id="title"
               onChange={onValueChange}
-              placeholder="제목을 입력해 주세요."
+              defaultValue={form.title ? form.title : 0}
             />
           </Form.Item>
           <Form.Item name={'category'} rules={[{ required: true }]}>
             <Select
               name="category"
-              style={{ width: '100%' }}
-              onChange={onSelectChange}
+              style={{ width: 200 }}
+              onChange={onValueChange}
               placeholder="카테고리를 선택하세요"
+              defaultValue={form.category}
             >
               <Option value="web">Web</Option>
               <Option value="android">Android</Option>
@@ -116,12 +112,14 @@ function ProjectWrite() {
               <Option value="design">Design</Option>
             </Select>
           </Form.Item>
-          <Form.Item name={'previewImg'} label="미리보기 이미지">
+          <Form.Item
+            name={'previewImg'}
+            label="post file"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+          >
             <Imageupload refreshFunction={onImageChange} />
             <span>* 최대 3장까지 업로드 가능</span>
-          </Form.Item>
-          <Form.Item name={'file'} label="첨부파일">
-            <Fileupload refreshFunction={onFileChange} />
           </Form.Item>
           <Editor
             previewStyle="vertical"
@@ -130,18 +128,17 @@ function ProjectWrite() {
             initialEditType="wysiwyg"
             ref={editorRef}
             onChange={onEditorChange}
+            initialValue={form.contents}
           />
-          <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
-              글쓰기
-            </Button>
-          </Form.Item>
+          <Button onClick={onSubmit} type="primary" style={{ width: '100%' }}>
+            수정하기
+          </Button>
         </Form>
       ) : (
         <div>로그인하고 이용하세요.</div>
       )}
-    </ProjectWriteContainer>
+    </PostWriteContainer>
   );
 }
 
-export default ProjectWrite;
+export default PostEdit;

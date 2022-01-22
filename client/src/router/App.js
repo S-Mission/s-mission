@@ -12,11 +12,11 @@ import Footer from 'components/Footer/index';
 import Main from 'pages/Community/Main/index';
 import SignUp from 'pages/Community/SignUp/index';
 import CloseAccount from 'pages/Community/CloseAccount';
-import ProjectDetail from 'pages/Community/ProjectDetail';
+import PostDetail from 'pages/Community/PostDetail';
 import MyPage from 'pages/Community/MyPage';
-import ProjectList from 'pages/Community/ProjectList';
-import ProjectWrite from 'pages/Community/ProjectWrite';
-import ProjectEdit from 'pages/Community/ProjectEdit';
+import PostList from 'pages/Community/PostList';
+import PostWrite from 'pages/Community/PostWrite';
+import PostEdit from 'pages/Community/PostEdit';
 import FindPassword from 'pages/Community/FindPassword';
 import CategoryFindResult from 'pages/Community/CategoryFindResult';
 import Search from 'pages/Community/Search';
@@ -58,13 +58,13 @@ function App() {
 
         <Route path="/user/mypage/:id" exact component={MyPage} />
 
-        <Route path="/project" exact component={ProjectList} />
-        <Route path="/project/write" exact component={ProjectWrite} />
+        <Route path="/post" exact component={PostList} />
+        <Route path="/post/write" exact component={PostWrite} />
 
-        <Route path="/project/detail/:id" exact component={ProjectDetail} />
-        <Route path="/project/edit/:id" exact component={ProjectEdit} />
+        <Route path="/post/detail/:id" exact component={PostDetail} />
+        <Route path="/post/edit/:id" exact component={PostEdit} />
         <Route
-          path="/project/category/:categoryName"
+          path="/post/category/:categoryName"
           exact
           component={CategoryFindResult}
         />

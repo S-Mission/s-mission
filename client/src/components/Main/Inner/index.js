@@ -18,7 +18,7 @@ import {
 
 // component
 import LoginModal from 'components/LoginModal/LoginModal';
-import { topRatedProjectsAction } from 'redux/actions/project_actions';
+import { topRatedPostsAction } from 'redux/actions/post_actions';
 
 const { Meta } = Card;
 
@@ -44,12 +44,12 @@ function Inner() {
   };
 
   const { isAuthenticated, userName } = useSelector((state) => state.auth);
-  const { topRated } = useSelector((state) => state.project);
+  const { topRated } = useSelector((state) => state.post);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(topRatedProjectsAction());
+    dispatch(topRatedPostsAction());
   }, [dispatch]);
 
   return (
@@ -62,14 +62,14 @@ function Inner() {
         </div>
         <CardContainer>
           {Array.isArray(topRated)
-            ? topRated.map((project) => {
-                let content = project.contents.replace(
+            ? topRated.map((post) => {
+                let content = post.contents.replace(
                   /<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/gi,
                   '',
                 );
 
                 return (
-                  <Link to={`/project/detail/${project._id}`}>
+                  <Link to={`/post/detail/${post._id}`}>
                     <CardContent
                       cover={
                         // 이미지 링크는 나중에 S3로 옮기고 나서 해야될듯... 로컬에 파일이 없으니 사진이 안뜨니까
@@ -80,7 +80,7 @@ function Inner() {
                       }
                     >
                       <Meta
-                        title={project.title}
+                        title={post.title}
                         description={
                           content.length >= 30
                             ? content.slice(0, 30) + '...'
@@ -105,7 +105,7 @@ function Inner() {
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry ...
             </div>
-            <Link to="/project/write">
+            <Link to="/post/write">
               <Button type="primary">글쓰기</Button>
             </Link>
           </UserInfo>

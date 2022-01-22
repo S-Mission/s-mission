@@ -10,13 +10,13 @@ import {
   OfficeContainer,
 } from './style';
 import { Link, useParams } from 'react-router-dom';
-import { searchAction } from 'redux/actions/project_actions';
+import { searchAction } from 'redux/actions/post_actions';
 
 function Search() {
   let { searchTerm } = useParams();
 
   const dispatch = useDispatch();
-  const { searchResult, searchBy } = useSelector((state) => state.project);
+  const { searchResult, searchBy } = useSelector((state) => state.post);
 
   useEffect(() => {
     if (searchTerm) {
@@ -25,16 +25,16 @@ function Search() {
   }, [dispatch, searchTerm]);
 
   const searchCard = Array.isArray(searchResult)
-    ? searchResult.map((project, index) => {
-        var content = project.contents.replace(
+    ? searchResult.map((post, index) => {
+        var content = post.contents.replace(
           /<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/gi,
           '',
         );
         return (
           <CardWrap key={index}>
-            <Link to={`/project/detail/${project._id}`}>
-              <CardContent title={project.title}>
-                <p>{project.creator.name}</p>
+            <Link to={`/post/detail/${post._id}`}>
+              <CardContent title={post.title}>
+                <p>{post.creator.name}</p>
                 <p>
                   {content.length > 80
                     ? content.slice(0, 80) + ' ...'
