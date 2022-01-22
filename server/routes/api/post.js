@@ -93,12 +93,8 @@ router.post('/write', auth, async (req, res) => {
   try {
     const { title, contents, category, previewImg, file, originalfileName } =
       req.body;
-<<<<<<< HEAD:server/routes/api/project.js
-=======
 
     if (!contents) return res.status(400).json({ msg: '내용을 입력해주세요.' });
-
->>>>>>> f3f2c4e59f6203101027c9c859f4a78e2fdc82a7:server/routes/api/post.js
     // 새로운 프로젝트 생성
     const newPost = await Post.create({
       title,
