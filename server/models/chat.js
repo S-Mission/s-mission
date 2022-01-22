@@ -13,6 +13,17 @@ const chatSchema = mongoose.Schema(
     type: {
       type: String,
     },
+    projectId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'project-schedule',
+    },
+    chat_msg: {
+      type: String,
+    },
+    sender: {
+      type: String,
+      ref: 'user',
+    },
   },
   { timestamps: true },
 );
