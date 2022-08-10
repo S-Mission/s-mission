@@ -118,7 +118,6 @@ router.post('/write', auth, async (req, res) => {
       req.body;
 
     if (!contents) return res.status(400).json({ msg: '내용을 입력해주세요.' });
-
     // 새로운 프로젝트 생성
     const newPost = await Post.create({
       title,
