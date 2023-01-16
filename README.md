@@ -8,3 +8,7 @@ S-Mission is a project that provides side project community & management service
 ## Dependencies
 
 - Mac, Windows, iOS, Android 모두 사용 가능
+
+## Start
+
+MongoDB 및 구글 로그인 등 여러 개인 정보가 포함되어 있어 실행이 불가능합니다...
